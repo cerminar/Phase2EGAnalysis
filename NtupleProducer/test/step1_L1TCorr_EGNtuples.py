@@ -125,7 +125,13 @@ process.load('Phase2EGTriggerAnalysis.NtupleProducer.L1TEGNtuple_cff')
 
 # hgcalTriggerPrimitivesTask
 
-process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
+doHgcTPS = True
+if doHgcTPS: 
+    process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer)
+    process.load('L1Trigger.L1THGCal.hgcalTriggerPrimitives_cff')
+else:
+    process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
+
 
 process.TFileService = cms.Service(
     "TFileService",
@@ -165,7 +171,9 @@ process.extraStuff = cms.Task(
 
 # process.ntuple_step
 process.ntuple_step.associate(process.extraStuff)
-
+if doHgcTPS:
+    process.ntuple_step.associate(process.hgcalTriggerPrimitivesTask)
+    
 process.schedule = cms.Schedule(process.ntuple_step)
 
 # from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask

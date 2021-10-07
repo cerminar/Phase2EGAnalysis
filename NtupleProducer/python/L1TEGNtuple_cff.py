@@ -1,19 +1,15 @@
 import FWCore.ParameterSet.Config as cms
 
-from L1Trigger.L1THGCalUtilities.hgcalTriggerNtuples_cfi import *
-
-l1EGTriggerNtuplizer = hgcalTriggerNtuplizer.clone()
-
-ntuple_multiclusters_hmvdr = ntuple_multiclusters.clone()
-ntuple_multiclusters_hmvdr.Prefix = cms.untracked.string('Cl3D')
 
 from Phase2EGTriggerAnalysis.NtupleProducer.L1TEGNtuple_cfi import *
 
+l1EGTriggerNtuplizer = hgcalTriggerNtuplizer.clone()
 l1EGTriggerNtuplizer.Ntuples = cms.VPSet(
     ntuple_event,
     ntuple_gen,
     ntuple_triggercells,
     ntuple_multiclusters_hmvdr,
+    ntuple_multiclusters_extra,
     ntuple_EGStaEB,
     ntuple_EGStaEE,
     ntuple_TTTracks,
@@ -56,6 +52,9 @@ l1EGTriggerNtuplizer_l1tCorr.Ntuples = cms.VPSet(
     ntuple_L1TCorrTkEmEB
 )
 
+
+l1EGTriggerNtuplizer_l1tCorrWCand = l1EGTriggerNtuplizer_l1tCorr.clone()
+l1EGTriggerNtuplizer_l1tCorrWCand.Ntuples.append = ntuple_PFCand
 
 l1EGTriggerNtuplizer_noGen = hgcalTriggerNtuplizer.clone()
 l1EGTriggerNtuplizer_noGen.Ntuples = cms.VPSet(

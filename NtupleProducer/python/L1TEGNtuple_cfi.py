@@ -1,5 +1,22 @@
 import FWCore.ParameterSet.Config as cms
 
+# cluster extras
+from L1Trigger.L1THGCalUtilities.hgcalTriggerNtuples_cfi import *
+from L1Trigger.Phase2L1ParticleFlow.pfClustersFromHGC3DClusters_cfi import *
+
+
+ntuple_multiclusters_hmvdr = ntuple_multiclusters.clone()
+ntuple_multiclusters_hmvdr.Prefix = cms.untracked.string('Cl3D')
+
+
+ntuple_multiclusters_extra = cms.PSet(
+    NtupleName=cms.string('L1TEGNtupleHGCMulticlusterExtra'),
+    Multiclusters=ntuple_multiclusters_hmvdr.Multiclusters,
+    BranchNamePrefix=ntuple_multiclusters_hmvdr.Prefix,
+    emVsPionID=pfClustersFromHGC3DClusters.emVsPionID,
+    emVsPUID=pfClustersFromHGC3DClusters.emVsPUID
+)
+
 # tracks
 ntuple_TTTracks = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTrackTrigger'),
@@ -90,4 +107,10 @@ ntuple_L1TCorrTkEmEB = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTkEm'),
     TkEms=cms.InputTag("l1ctLayer1EG", "L1TkEmEB"),
     BranchNamePrefix=cms.untracked.string("TkEmEB")
+)
+
+ntuple_PFCand = cms.PSet(
+    NtupleName=cms.string('L1TEGNtuplePFCands'),
+    L1PFObjects=cms.InputTag("l1ctLayer1", "PF"),
+    BranchNamePrefix=cms.untracked.string("PFCand")
 )
