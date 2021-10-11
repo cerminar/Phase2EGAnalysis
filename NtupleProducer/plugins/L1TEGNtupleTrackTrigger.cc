@@ -18,6 +18,11 @@
 #include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
 #include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
+#include "SimTracker/TrackTriggerAssociation/interface/TTStubAssociationMap.h"
+#include "SimTracker/TrackTriggerAssociation/interface/TTTrackAssociationMap.h"
+
+
+
 #include "L1TEGNtupleBase.h"
 
 class L1TEGNtupleTrackTrigger : public L1TEGNtupleBase {
@@ -38,7 +43,12 @@ private:
 
   edm::EDGetToken track_token_;
   edm::EDGetToken decoded_track_token_;
-  bool fill_decoded_pftracks;
+  edm::EDGetToken ttStubMCTruthToken_;
+  edm::EDGetToken ttTrackMCTruthToken_;
+
+  bool fill_decoded_pftracks_;
+  bool fill_stubs_;
+  bool fill_mctruth_;
 
   int l1track_n_;
   std::vector<float> l1track_pt_;
@@ -51,10 +61,19 @@ private:
   std::vector<float> l1track_chi2_;
   std::vector<float> l1track_chi2Red_;
   std::vector<int> l1track_nStubs_;
+  
+  std::vector<std::vector<int>> l1track_stubTpPid_;
+  std::vector<std::vector<float>> l1track_stubTpPt_;
+  std::vector<std::vector<float>> l1track_stubTpEta_;
+  std::vector<std::vector<float>> l1track_stubTpPhi_;
+  std::vector<std::vector<int>> l1track_stubTpGenuine_;
+
   std::vector<float> l1track_z0_;
   std::vector<int> l1track_charge_;
   std::vector<float> l1track_caloeta_;
   std::vector<float> l1track_calophi_;
+  std::vector<int> l1track_tpmatch_;
+
 
   int pfdtk_n_;
   std::vector<float> pfdtk_pt_;
@@ -82,15 +101,28 @@ L1TEGNtupleTrackTrigger::L1TEGNtupleTrackTrigger(const edm::ParameterSet& conf)
     : L1TEGNtupleBase(conf) {}
 
 void L1TEGNtupleTrackTrigger::initialize(TTree& tree,
-                                             const edm::ParameterSet& conf,
-                                             edm::ConsumesCollector&& collector) {
+                                         const edm::ParameterSet& conf,
+                                         edm::ConsumesCollector&& collector) {
   track_token_ =
       collector.consumes<std::vector<TTTrack<Ref_Phase2TrackerDigi_>>>(conf.getParameter<edm::InputTag>("TTTracks"));
 
-  decoded_track_token_ = 
-    collector.consumes<std::vector<l1t::PFTrack>>(conf.getParameter<edm::InputTag>("PFDecodedTracks"));
+  fill_decoded_pftracks_ = conf.getParameter<bool>("fillPFDecodedTracks");
+  fill_stubs_ = conf.getParameter<bool>("fillStubsInfo");
+  fill_mctruth_ = conf.getParameter<bool>("fillTrackingParticleTruth");
 
-  fill_decoded_pftracks = conf.getParameter<bool>("fillPFDecodedTracks");
+  if(fill_decoded_pftracks_) {
+    decoded_track_token_ = 
+      collector.consumes<std::vector<l1t::PFTrack>>(conf.getParameter<edm::InputTag>("PFDecodedTracks"));
+  }
+
+  if(fill_mctruth_) {
+    ttStubMCTruthToken_ = 
+      collector.consumes<TTStubAssociationMap<Ref_Phase2TrackerDigi_> >(conf.getParameter<edm::InputTag>("MCTruthStubInputTag"));
+
+    ttTrackMCTruthToken_ = 
+      collector.consumes<TTTrackAssociationMap<Ref_Phase2TrackerDigi_> >(conf.getParameter<edm::InputTag>("MCTruthTrackInputTag"));
+  }
+
 
   tree.Branch(branch_name_w_prefix("n").c_str(), &l1track_n_, branch_name_w_prefix("n/I").c_str());
   tree.Branch(branch_name_w_prefix("pt").c_str(), &l1track_pt_);
@@ -102,13 +134,26 @@ void L1TEGNtupleTrackTrigger::initialize(TTree& tree,
   tree.Branch(branch_name_w_prefix("curv").c_str(), &l1track_curv_);
   tree.Branch(branch_name_w_prefix("chi2").c_str(), &l1track_chi2_);
   tree.Branch(branch_name_w_prefix("chi2Red").c_str(), &l1track_chi2Red_);
-  tree.Branch(branch_name_w_prefix("nStubs").c_str(), &l1track_nStubs_);
+  if(fill_stubs_) {
+    tree.Branch(branch_name_w_prefix("nStubs").c_str(), &l1track_nStubs_);
+    if(fill_mctruth_) {
+      tree.Branch(branch_name_w_prefix("stubTpPid").c_str(), &l1track_stubTpPid_);
+      tree.Branch(branch_name_w_prefix("stubTpPt").c_str(), &l1track_stubTpPt_);
+      tree.Branch(branch_name_w_prefix("stubTpEta").c_str(), &l1track_stubTpEta_);
+      tree.Branch(branch_name_w_prefix("stubTpPhi").c_str(), &l1track_stubTpPhi_);
+      tree.Branch(branch_name_w_prefix("stubTpGenuine").c_str(), &l1track_stubTpGenuine_);
+    }
+  }
   tree.Branch(branch_name_w_prefix("z0").c_str(), &l1track_z0_);
   tree.Branch(branch_name_w_prefix("charge").c_str(), &l1track_charge_);
   tree.Branch(branch_name_w_prefix("caloeta").c_str(), &l1track_caloeta_);
   tree.Branch(branch_name_w_prefix("calophi").c_str(), &l1track_calophi_);
+
+  if(fill_mctruth_) {
+    tree.Branch(branch_name_w_prefix("tpmatch").c_str(), &l1track_tpmatch_);    
+  }
   
-  if(fill_decoded_pftracks) {
+  if(fill_decoded_pftracks_) {
     tree.Branch("pfdtk_n", &pfdtk_n_, "pfdtk_n/I");
     tree.Branch("pfdtk_pt", &pfdtk_pt_);
     tree.Branch("pfdtk_eta", &pfdtk_eta_);
@@ -132,8 +177,16 @@ void L1TEGNtupleTrackTrigger::fill(const edm::Event& ev, const edm::EventSetup& 
   ev.getByToken(track_token_, l1TTTrackHandle);
 
   edm::Handle<std::vector<l1t::PFTrack>> pfDecodedTrackHandle;
-  ev.getByToken(decoded_track_token_, pfDecodedTrackHandle);
+  if(fill_decoded_pftracks_) {
+    ev.getByToken(decoded_track_token_, pfDecodedTrackHandle);
+  }
 
+  edm::Handle<TTStubAssociationMap<Ref_Phase2TrackerDigi_> > MCTruthTTStubHandle;
+  edm::Handle<TTTrackAssociationMap<Ref_Phase2TrackerDigi_> > MCTruthTTTrackHandle;
+  if(fill_mctruth_) {
+    ev.getByToken(ttStubMCTruthToken_, MCTruthTTStubHandle);
+    ev.getByToken(ttTrackMCTruthToken_, MCTruthTTTrackHandle);
+  }
 
   float fBz = 0;
   if (magfield_watcher_.check(es)) {
@@ -152,6 +205,8 @@ void L1TEGNtupleTrackTrigger::fill(const edm::Event& ev, const edm::EventSetup& 
 
   clear();
   for (auto trackIter = l1TTTrackHandle->begin(); trackIter != l1TTTrackHandle->end(); ++trackIter) {
+    edm::Ptr<TTTrack<Ref_Phase2TrackerDigi_> > l1track_ptr(l1TTTrackHandle, l1track_n_);
+
     l1track_n_++;
     l1track_pt_.emplace_back(trackIter->momentum().perp());
     l1track_pt2stubs_.emplace_back(pTFrom2Stubs::pTFrom2(trackIter, tGeom));
@@ -162,7 +217,74 @@ void L1TEGNtupleTrackTrigger::fill(const edm::Event& ev, const edm::EventSetup& 
     l1track_curv_.emplace_back(trackIter->rInv());
     l1track_chi2_.emplace_back(trackIter->chi2());
     l1track_chi2Red_.emplace_back(trackIter->chi2Red());
-    l1track_nStubs_.emplace_back(trackIter->getStubRefs().size());
+    
+    
+    // edm::Ptr<TrackingParticle> my_tp = MCTruthTTTrackHandle->findTrackingParticlePtr(trackIter);
+
+    
+    if(fill_stubs_) {
+      l1track_nStubs_.emplace_back(trackIter->getStubRefs().size());
+
+      if(fill_mctruth_) {
+        std::vector<int> stub_tp_id;
+        std::vector<float> stub_tp_pt;
+        std::vector<float> stub_tp_eta;
+        std::vector<float> stub_tp_phi;
+        std::vector<int> stub_tp_genuine;
+
+        for(const auto& stub: trackIter->getStubRefs()) {
+          edm::Ptr<TrackingParticle> my_tp = MCTruthTTStubHandle->findTrackingParticlePtr(stub);
+
+          int stub_genuine = MCTruthTTStubHandle->isGenuine(stub);
+
+          if (my_tp.isNull() == false) {
+            int tmp_eventid = my_tp->eventId().event();
+
+            if (tmp_eventid > 0) {
+              // std::cout << "  this is PU TrackingParticle" << std::endl;
+              
+              stub_tp_id.push_back(999);
+              stub_tp_pt.push_back(0);
+              stub_tp_eta.push_back(0);
+              stub_tp_phi.push_back(0);
+              stub_tp_genuine.push_back(stub_genuine);
+
+              
+              continue;
+            }
+            
+            stub_tp_id.push_back(my_tp->pdgId());
+            stub_tp_pt.push_back(my_tp->p4().pt());
+            stub_tp_eta.push_back(my_tp->p4().eta());
+            stub_tp_phi.push_back(my_tp->p4().phi() );
+            stub_tp_genuine.push_back(stub_genuine);
+
+            // std::cout << "   TP PID: " << my_tp->pdgId()
+            //            << " pt: " << my_tp->p4().pt()
+            //            << " eta: " << my_tp->p4().eta()
+            //            << " phi: " << my_tp->p4().phi() 
+            //            << " genuine: " << stub_genuine
+            //            << std::endl;
+                       
+          } else {
+            // std::cout << "   No matched TrackingParticle " << std::endl;
+            stub_tp_id.push_back(-999);
+            stub_tp_pt.push_back(0);
+            stub_tp_eta.push_back(0);
+            stub_tp_phi.push_back(0);
+            stub_tp_genuine.push_back(stub_genuine);
+          }
+
+        }
+        l1track_stubTpPid_.push_back(stub_tp_id);
+        l1track_stubTpPt_.push_back(stub_tp_pt);
+        l1track_stubTpEta_.push_back(stub_tp_eta);
+        l1track_stubTpPhi_.push_back(stub_tp_phi);
+        l1track_stubTpGenuine_.push_back(stub_tp_genuine);
+
+      }
+
+    }
     // FIXME: need to be configuratble?
     // int nParam_ = 4;
     float z0 = trackIter->POCA().z();  //cm
@@ -179,9 +301,39 @@ void L1TEGNtupleTrackTrigger::fill(const edm::Event& ev, const edm::EventSetup& 
     l1track_charge_.emplace_back(charge);
     l1track_caloeta_.emplace_back(caloetaphi.first);
     l1track_calophi_.emplace_back(caloetaphi.second);
+    
+    ///--- Get quality of L1 track based on truth info.
+    /// (N.B. "genuine" tracks are used for official L1 track efficiency measurements).
+
+    /// Exactly one (i.e. not 0 or >= 2) unique TP contributes to every stub on the track.
+    /// (even if it is not the principle TP in a stub, or contributes to only one cluster
+    /// in the stub, it still counts).
+    /// N.B. If cfg param getAllowOneFalse2SStub() is true, then one incorrect stub in
+    /// a 2S module is alowed
+    /// ISSUE: a track with 4 stubs can be accepted if only 3 of its stubs are correct!
+    /// ISSUE: isLooselyGenuine() must also be true. So if 2 TPs match track, one with
+    /// an incorrect PS stub, both isGenuine() & isLooselyGenuine() will be false!
+    
+    if(fill_mctruth_) {
+      int tmp_trk_genuine = MCTruthTTTrackHandle->isGenuine(l1track_ptr);
+      int tmp_trk_loose = MCTruthTTTrackHandle->isLooselyGenuine(l1track_ptr);
+      int tmp_trk_unknown = MCTruthTTTrackHandle->isUnknown(l1track_ptr);
+      int tmp_trk_combinatoric = MCTruthTTTrackHandle->isCombinatoric(l1track_ptr);
+      
+      unsigned int tpmatch = (tmp_trk_combinatoric) + (tmp_trk_unknown << 1) + (tmp_trk_loose << 2) + (tmp_trk_genuine << 3);
+      l1track_tpmatch_.push_back(tpmatch);
+      // std::cout << "Track Genuine: " << tmp_trk_genuine
+      // << " loose-genuine: " << tmp_trk_loose
+      //   /// More than one stub on track is "unknown".
+      // << " unknown: " << tmp_trk_unknown
+      //   /// Both isLooselyGenuine() & isUnknown() are false.
+      // << " combinatorics: " << tmp_trk_combinatoric 
+      // << " TP Match: " << tpmatch
+      // <<std::endl;
+    }
   }
   
-  if(fill_decoded_pftracks) {
+  if(fill_decoded_pftracks_) {
     for(auto dtk: *pfDecodedTrackHandle) {
       pfdtk_n_++;
       pfdtk_pt_.emplace_back(dtk.pt());
@@ -228,6 +380,7 @@ void L1TEGNtupleTrackTrigger::clear() {
   l1track_charge_.clear();
   l1track_caloeta_.clear();
   l1track_calophi_.clear();
+  l1track_tpmatch_.clear();
   
   pfdtk_n_ = 0;
   pfdtk_pt_.clear();

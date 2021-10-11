@@ -22,7 +22,11 @@ ntuple_TTTracks = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTrackTrigger'),
     TTTracks=cms.InputTag("TTTracksFromTrackletEmulation", "Level1TTTracks"),
     fillPFDecodedTracks=cms.bool(False),
+    fillStubsInfo=cms.bool(True),
+    fillTrackingParticleTruth=cms.bool(False),
     PFDecodedTracks=cms.InputTag("l1ctLayer1HGCal", 'DecodedTK'),
+    MCTruthStubInputTag=cms.InputTag("TTStubAssociatorFromPixelDigis", "StubAccepted"),
+    MCTruthTrackInputTag=cms.InputTag("TTTrackAssociatorFromPixelDigis", "Level1TTTracks"),  # MCTruth input
     BranchNamePrefix=cms.untracked.string("l1Trk")
 )
 

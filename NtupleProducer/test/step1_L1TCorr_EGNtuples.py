@@ -61,7 +61,7 @@ process.options = cms.untracked.PSet(
     numberOfConcurrentRuns = cms.untracked.uint32(1),
     numberOfStreams = cms.untracked.uint32(0),
     numberOfThreads = cms.untracked.uint32(1),
-    printDependencies = cms.untracked.bool(False),
+    printDependencies = cms.untracked.bool(True),
     sizeOfStackForThreadsInKB = cms.optional.untracked.uint32,
     throwIfIllegalParameter = cms.untracked.bool(True),
     wantSummary = cms.untracked.bool(False)
@@ -125,7 +125,7 @@ process.load('Phase2EGTriggerAnalysis.NtupleProducer.L1TEGNtuple_cff')
 
 # hgcalTriggerPrimitivesTask
 
-doHgcTPS = True
+doHgcTPS = False
 if doHgcTPS: 
     process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer)
     process.load('L1Trigger.L1THGCal.hgcalTriggerPrimitives_cff')
@@ -150,7 +150,10 @@ process.extraStuff = cms.Task(
     process.l1ctLayer1Task,
     )
 
-
+process.TrackTruthTask = cms.Task(
+    process.TTClusterAssociatorFromPixelDigis,
+    process.TTStubAssociatorFromPixelDigis,
+    process.TTTrackAssociatorFromPixelDigis)
 # process.load("L1Trigger.Phase2L1ParticleFlow.l1ParticleFlow_cff")
 
 # process.L1simulation_step.remove(process.L1TkElectronsCrystal)
@@ -174,6 +177,8 @@ process.ntuple_step.associate(process.extraStuff)
 if doHgcTPS:
     process.ntuple_step.associate(process.hgcalTriggerPrimitivesTask)
     
+# process.ntuple_step.associate(process.TrackTruthTask)
+
 process.schedule = cms.Schedule(process.ntuple_step)
 
 # from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
