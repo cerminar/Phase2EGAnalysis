@@ -5,6 +5,12 @@ from L1Trigger.L1THGCalUtilities.hgcalTriggerNtuples_cfi import *
 from L1Trigger.Phase2L1ParticleFlow.pfClustersFromHGC3DClusters_cfi import *
 
 
+l1tEGNtuplizer = cms.EDAnalyzer(
+    "L1TEGNtupleManager",
+    Ntuples = cms.VPSet()
+)
+
+
 ntuple_multiclusters_hmvdr = ntuple_multiclusters.clone()
 ntuple_multiclusters_hmvdr.Prefix = cms.untracked.string('Cl3D')
 

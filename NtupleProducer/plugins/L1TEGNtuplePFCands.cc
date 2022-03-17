@@ -1,4 +1,4 @@
-#include "L1TEGNtupleBase.h"
+#include "Phase2EGTriggerAnalysis/NtupleProducer/interface/L1TEGNtupleBase.h"
 
 #include "DataFormats/L1TParticleFlow/interface/PFCandidate.h"
 
@@ -29,7 +29,7 @@ private:
   
 };
 
-DEFINE_EDM_PLUGIN(HGCalTriggerNtupleFactory, L1TEGNtuplePFCands, "L1TEGNtuplePFCands");
+DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtuplePFCands, "L1TEGNtuplePFCands");
 
 L1TEGNtuplePFCands::L1TEGNtuplePFCands(const edm::ParameterSet& conf)
     : L1TEGNtupleBase(conf) {}

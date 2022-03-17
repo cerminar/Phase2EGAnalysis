@@ -1,4 +1,4 @@
-#include "L1TEGNtupleBase.h"
+#include "Phase2EGTriggerAnalysis/NtupleProducer/interface/L1TEGNtupleBase.h"
 
 #include "DataFormats/L1TCorrelator/interface/TkEm.h"
 #include "DataFormats/L1TCorrelator/interface/TkEmFwd.h"
@@ -28,7 +28,7 @@ private:
 
 };
 
-DEFINE_EDM_PLUGIN(HGCalTriggerNtupleFactory, L1TEGNtupleTkEm, "L1TEGNtupleTkEm");
+DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtupleTkEm, "L1TEGNtupleTkEm");
 
 L1TEGNtupleTkEm::L1TEGNtupleTkEm(const edm::ParameterSet& conf)
     : L1TEGNtupleBase(conf) {}

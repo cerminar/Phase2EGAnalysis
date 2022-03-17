@@ -1,6 +1,6 @@
 #include "DataFormats/L1THGCal/interface/HGCalMulticluster.h"
 #include "L1Trigger/Phase2L1ParticleFlow/interface/HGC3DClusterEgID.h"
-#include "L1TEGNtupleBase.h"
+#include "Phase2EGTriggerAnalysis/NtupleProducer/interface/L1TEGNtupleBase.h"
 
 
 class L1TEGNtupleHGCMulticlusterExtra : public L1TEGNtupleBase {
@@ -26,7 +26,7 @@ private:
   
 };
 
-DEFINE_EDM_PLUGIN(HGCalTriggerNtupleFactory, L1TEGNtupleHGCMulticlusterExtra, "L1TEGNtupleHGCMulticlusterExtra");
+DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtupleHGCMulticlusterExtra, "L1TEGNtupleHGCMulticlusterExtra");
 
 L1TEGNtupleHGCMulticlusterExtra::L1TEGNtupleHGCMulticlusterExtra(const edm::ParameterSet& conf)
     : L1TEGNtupleBase(conf),

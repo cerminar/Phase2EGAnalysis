@@ -1,6 +1,5 @@
-<library   name="Phase2EGTriggerAnalysisNtupleProducerPlugins_test_ntuples" file="*.cc">
-  <use   name="L1Trigger/L1THGCal"/>
-  <use   name="L1Trigger/L1THGCalUtilities"/>
+<library   name="Phase2EGTriggerAnalysisNtupleProducerPlugins" file="*.cc">
+  <use   name="Phase2EGTriggerAnalysis/NtupleProducer"/>
   <use   name="CommonTools/BaseParticlePropagator"/>
   <use   name="MagneticField/Engine"/>
   <use   name="MagneticField/Records"/>
@@ -8,9 +7,10 @@
   <use   name="L1Trigger/L1TTrackMatch"/>
   <use   name="Geometry/TrackerGeometryBuilder"/>
   <use   name="SimTracker/TrackTriggerAssociation"/>
+  <use   name="CommonTools/UtilAlgos"/>
+  <use name="L1Trigger/L1THGCalUtilities"/>
 
-  <!-- <use   name="CommonTools/UtilAlgos"/>
-  <use   name="SimDataFormats/CaloTest"/>
+  <!-- <use   name="SimDataFormats/CaloTest"/>
   <use   name="DataFormats/JetReco"/>
   <use   name="Geometry/HcalTowerAlgo"/>
   <use   name="SimDataFormats/PileupSummaryInfo"/>

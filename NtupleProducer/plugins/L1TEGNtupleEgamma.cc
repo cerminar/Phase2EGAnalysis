@@ -1,5 +1,5 @@
 #include "DataFormats/L1Trigger/interface/EGamma.h"
-#include "L1TEGNtupleBase.h"
+#include "Phase2EGTriggerAnalysis/NtupleProducer/interface/L1TEGNtupleBase.h"
 
 class L1TEGNtupleEgamma : public L1TEGNtupleBase {
 public:
@@ -21,7 +21,7 @@ private:
   std::vector<float> egamma_hwQual_;
 };
 
-DEFINE_EDM_PLUGIN(HGCalTriggerNtupleFactory, L1TEGNtupleEgamma, "L1TEGNtupleEgamma");
+DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtupleEgamma, "L1TEGNtupleEgamma");
 
 L1TEGNtupleEgamma::L1TEGNtupleEgamma(const edm::ParameterSet& conf) : L1TEGNtupleBase(conf) {}
 

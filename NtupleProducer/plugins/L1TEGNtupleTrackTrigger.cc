@@ -14,8 +14,7 @@
 
 #include "CommonTools/BaseParticlePropagator/interface/BaseParticlePropagator.h"
 #include "FWCore/Framework/interface/ESWatcher.h"
-
-#include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
+ 
 #include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
 #include "SimTracker/TrackTriggerAssociation/interface/TTStubAssociationMap.h"
@@ -23,14 +22,15 @@
 
 
 
-#include "L1TEGNtupleBase.h"
+#include "Phase2EGTriggerAnalysis/NtupleProducer/interface/L1TEGNtupleBase.h"
 
 class L1TEGNtupleTrackTrigger : public L1TEGNtupleBase {
 public:
   L1TEGNtupleTrackTrigger(const edm::ParameterSet& conf);
   ~L1TEGNtupleTrackTrigger() override{};
   void initialize(TTree&, const edm::ParameterSet&, edm::ConsumesCollector&&) final;
-  void fill(const edm::Event& e, const edm::EventSetup& es) final;
+  void fill(const edm::Event &e, const L1TEGNtupleEventSetup &l1teg_es) final;
+  // void fill(const edm::Event& e, const edm::EventSetup& es) final;
   typedef TTTrack<Ref_Phase2TrackerDigi_> L1TTTrackType;
 
 private:
@@ -92,13 +92,16 @@ private:
 
 
   edm::ESWatcher<IdealMagneticFieldRecord> magfield_watcher_;
+
   HGCalTriggerTools triggerTools_;
 };
 
-DEFINE_EDM_PLUGIN(HGCalTriggerNtupleFactory, L1TEGNtupleTrackTrigger, "L1TEGNtupleTrackTrigger");
+DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtupleTrackTrigger, "L1TEGNtupleTrackTrigger");
 
 L1TEGNtupleTrackTrigger::L1TEGNtupleTrackTrigger(const edm::ParameterSet& conf)
-    : L1TEGNtupleBase(conf) {}
+    : L1TEGNtupleBase(conf) {
+      accessEventSetup_ = false;
+    }
 
 void L1TEGNtupleTrackTrigger::initialize(TTree& tree,
                                          const edm::ParameterSet& conf,
@@ -171,7 +174,7 @@ void L1TEGNtupleTrackTrigger::initialize(TTree& tree,
   
 }
 
-void L1TEGNtupleTrackTrigger::fill(const edm::Event& ev, const edm::EventSetup& es) {
+void L1TEGNtupleTrackTrigger::fill(const edm::Event &ev, const L1TEGNtupleEventSetup &l1teg_es) {
   // the L1Tracks
   edm::Handle<std::vector<L1TTTrackType>> l1TTTrackHandle;
   ev.getByToken(track_token_, l1TTTrackHandle);
@@ -188,20 +191,13 @@ void L1TEGNtupleTrackTrigger::fill(const edm::Event& ev, const edm::EventSetup& 
     ev.getByToken(ttTrackMCTruthToken_, MCTruthTTTrackHandle);
   }
 
-  float fBz = 0;
-  if (magfield_watcher_.check(es)) {
-    edm::ESHandle<MagneticField> magfield;
-    es.get<IdealMagneticFieldRecord>().get(magfield);
-    // aField_ = &(*magfield);
-    fBz = magfield->inTesla(GlobalPoint(0, 0, 0)).z();
-  }
+  float fBz = l1teg_es.magfield->inTesla(GlobalPoint(0, 0, 0)).z();
+
 
   // geometry needed to call pTFrom2Stubs
-  edm::ESHandle<TrackerGeometry> geomHandle;
-  es.get<TrackerDigiGeometryRecord>().get("idealForDigi", geomHandle);
-  const TrackerGeometry* tGeom = geomHandle.product();
+  const TrackerGeometry* tGeom = l1teg_es.tkgeom.product();
 
-  triggerTools_.eventSetup(es);
+  triggerTools_.setGeometry(l1teg_es.hgcGeom.product());
 
   clear();
   for (auto trackIter = l1TTTrackHandle->begin(); trackIter != l1TTTrackHandle->end(); ++trackIter) {

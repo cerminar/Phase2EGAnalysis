@@ -1,4 +1,4 @@
-#include "L1TEGNtupleBase.h"
+#include "Phase2EGTriggerAnalysis/NtupleProducer/interface/L1TEGNtupleBase.h"
 
 #include "DataFormats/L1TCorrelator/interface/TkElectron.h"
 #include "DataFormats/L1TCorrelator/interface/TkElectronFwd.h"
@@ -29,7 +29,7 @@ private:
   std::vector<float> tkEle_tkZ0_;
 };
 
-DEFINE_EDM_PLUGIN(HGCalTriggerNtupleFactory, L1TEGNtupleTkElectrons, "L1TEGNtupleTkElectrons");
+DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtupleTkElectrons, "L1TEGNtupleTkElectrons");
 
 L1TEGNtupleTkElectrons::L1TEGNtupleTkElectrons(const edm::ParameterSet& conf)
     : L1TEGNtupleBase(conf) {}
