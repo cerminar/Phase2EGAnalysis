@@ -140,7 +140,7 @@ process.TFileService = cms.Service(
     
     
 process.extraStuff = cms.Task(
-    process.standaloneMuons,
+    process.L1SAMuonsGmt,
     process.L1GTTInputProducer, 
     # process.L1EGammaClusterEmuProducer,
     process.L1VertexFinderEmulator, 
