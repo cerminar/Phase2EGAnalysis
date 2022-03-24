@@ -8,7 +8,10 @@
   <use   name="L1Trigger/L1TTrackMatch"/>
   <use   name="Geometry/TrackerGeometryBuilder"/>
   <use   name="SimTracker/TrackTriggerAssociation"/>
-
+  <use   name="MagneticField/Engine"/>
+  <use   name="MagneticField/Records"/>
+  <use   name="TrackPropagation/RungeKutta"/>
+  <use   name="FastSimulation/Event"/>
   <!-- <use   name="CommonTools/UtilAlgos"/>
   <use   name="SimDataFormats/CaloTest"/>
   <use   name="DataFormats/JetReco"/>

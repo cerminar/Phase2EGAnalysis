@@ -9,6 +9,25 @@ ntuple_multiclusters_hmvdr = ntuple_multiclusters.clone()
 ntuple_multiclusters_hmvdr.Prefix = cms.untracked.string('Cl3D')
 
 
+ntuple_l1tgen = cms.PSet(
+    NtupleName = cms.string('L1TEGNtupleGen'),
+    GenPU = cms.InputTag("addPileupInfo"),
+    GenParticles = cms.InputTag("genParticles"),
+    MCEvent = cms.InputTag("generatorSmeared"),
+    SimTracks = cms.InputTag("g4SimHits"),
+    SimVertices = cms.InputTag("g4SimHits"),
+    particleFilter = cms.PSet(
+        EMin = cms.double(0.1),
+        chargedPtMin = cms.double(0.1),
+        etaMax = cms.double(3.1),
+        invisibleParticles = cms.vint32(),
+        protonEMin = cms.double(100000),
+        rMax = cms.double(129.0),
+        zMax = cms.double(317.0)
+    )
+)
+
+
 ntuple_multiclusters_extra = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleHGCMulticlusterExtra'),
     Multiclusters=ntuple_multiclusters_hmvdr.Multiclusters,

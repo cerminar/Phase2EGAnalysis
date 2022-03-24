@@ -6,7 +6,7 @@ from Phase2EGTriggerAnalysis.NtupleProducer.L1TEGNtuple_cfi import *
 l1EGTriggerNtuplizer = hgcalTriggerNtuplizer.clone()
 l1EGTriggerNtuplizer.Ntuples = cms.VPSet(
     ntuple_event,
-    ntuple_gen,
+    ntuple_l1tgen,
     ntuple_triggercells,
     ntuple_multiclusters_hmvdr,
     ntuple_multiclusters_extra,
@@ -26,7 +26,7 @@ l1EGTriggerNtuplizer.Ntuples = cms.VPSet(
 l1EGTriggerNtuplizer_egOnly = hgcalTriggerNtuplizer.clone()
 l1EGTriggerNtuplizer_egOnly.Ntuples = cms.VPSet(
     ntuple_event,
-    ntuple_gen,
+    ntuple_l1tgen,
     ntuple_TTTracks,
     ntuple_EGStaEB,
     ntuple_EGStaEE,
@@ -43,7 +43,7 @@ l1EGTriggerNtuplizer_egOnly.Ntuples = cms.VPSet(
 l1EGTriggerNtuplizer_l1tCorr = hgcalTriggerNtuplizer.clone()
 l1EGTriggerNtuplizer_l1tCorr.Ntuples = cms.VPSet(
     ntuple_event,
-    ntuple_gen,
+    ntuple_l1tgen,
     ntuple_TTTracks,
     ntuple_L1TCorrEGStaEE,
     ntuple_L1TCorrTkEleEE,
