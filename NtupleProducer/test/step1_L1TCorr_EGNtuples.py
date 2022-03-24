@@ -64,7 +64,7 @@ process.options = cms.untracked.PSet(
     printDependencies = cms.untracked.bool(True),
     sizeOfStackForThreadsInKB = cms.optional.untracked.uint32,
     throwIfIllegalParameter = cms.untracked.bool(True),
-    wantSummary = cms.untracked.bool(False)
+    wantSummary = cms.untracked.bool(True)
 )
 
 # Production Info
@@ -122,16 +122,27 @@ process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic_T15', ''
 # load ntuplizer
 process.load('Phase2EGTriggerAnalysis.NtupleProducer.L1TEGNtuple_cff')
 # process.ntuple_step = cms.Path(process.l1CaloTriggerNtuples)
+process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
+# process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer)
 
-# hgcalTriggerPrimitivesTask
 
-doHgcTPS = False
-if doHgcTPS: 
-    process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer)
-    process.load('L1Trigger.L1THGCal.hgcalTriggerPrimitives_cff')
+doHgcTPS = True
+doAllL1Emu = False
+doTrackTrigger = True
+
+if doTrackTrigger:
+        process.load('Configuration.StandardSequences.L1TrackTrigger_cff')
+        process.L1TrackTrigger_step = cms.Path(process.L1TrackTrigger)
+
+
+if doAllL1Emu:
+    process.load('L1Trigger.Configuration.SimL1Emulator_cff')
+    process.ntuple_step.associate(process.SimL1EmulatorTask)
 else:
-    process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
-
+    if doHgcTPS: 
+        process.load('L1Trigger.L1THGCal.hgcalTriggerPrimitives_cff')
+        process.ntuple_step.associate(process.hgcalTriggerPrimitivesTask)
+    
 
 process.TFileService = cms.Service(
     "TFileService",
@@ -174,13 +185,13 @@ process.TrackTruthTask = cms.Task(
 
 # process.ntuple_step
 process.ntuple_step.associate(process.extraStuff)
-if doHgcTPS:
-    process.ntuple_step.associate(process.hgcalTriggerPrimitivesTask)
-    
+
+
 # process.ntuple_step.associate(process.TrackTruthTask)
 
 process.schedule = cms.Schedule(process.ntuple_step)
-
+if doTrackTrigger:
+    process.schedule = cms.Schedule(process.L1TrackTrigger_step, process.ntuple_step)
 # from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 # associatePatAlgosToolsTask(process)
 
@@ -223,7 +234,6 @@ process = addMonitoring(process)
 from Configuration.StandardSequences.earlyDeleteSettings_cff import customiseEarlyDelete
 process = customiseEarlyDelete(process)
 # End adding early deletion
-
 
 def useTkInputEmulator(postfix="",bitwise=True,newTrackWord=True):
     process.pfTracksFromL1Tracks.redigitizeTrackWord = newTrackWord
