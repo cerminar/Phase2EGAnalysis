@@ -75,6 +75,7 @@ void L1TEGNtupleManager::beginRun(const edm::Run& run, const edm::EventSetup& es
   l1teg_ntuple_es_.magfield = es.getHandle(magfieldToken_);
   l1teg_ntuple_es_.tkgeom = es.getHandle(tkGeomToken_);
   l1teg_ntuple_es_.hgcGeom = es.getHandle(hgcTriggerGeomToken_);
+  l1teg_ntuple_es_.pdt = es.getHandle(pdtToken_);
 }
 
 void L1TEGNtupleManager::analyze(const edm::Event& e, const edm::EventSetup& es) {

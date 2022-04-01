@@ -20,7 +20,7 @@
 
 #include "CommonTools/BaseParticlePropagator/interface/BaseParticlePropagator.h"
 #include "CommonTools/BaseParticlePropagator/interface/RawParticle.h"
-#include "L1TEGNtupleBase.h"
+#include "Phase2EGTriggerAnalysis/NtupleProducer/interface/L1TEGNtupleBase.h"
 
 // NOTE: most of this code is borrowed by https://github.com/CMS-HGCAL/reco-ntuples
 // kudos goes to the original authors. Ideally the 2 repos should be merged since they share part of the use case
@@ -124,7 +124,7 @@ public:
   L1TEGNtupleGen(const edm::ParameterSet &);
 
   void initialize(TTree &, const edm::ParameterSet &, edm::ConsumesCollector &&) final;
-  void fill(const edm::Event &, const edm::EventSetup &) final;
+  void fill(const edm::Event &e, const L1TEGNtupleEventSetup &l1teg_es) final;
 
   enum ReachHGCal { notReach = 0, outsideEESurface = 1, onEESurface = 2 };
 
@@ -193,14 +193,13 @@ private:
   edm::EDGetToken simTracks_token_;
   edm::EDGetToken simVertices_token_;
   edm::EDGetToken hepmcev_token_;
-
-  edm::ESWatcher<PDTRecord> pdt_watcher_;
-  edm::ESWatcher<IdealMagneticFieldRecord> magfield_watcher_;
 };
 
-DEFINE_EDM_PLUGIN(HGCalTriggerNtupleFactory, L1TEGNtupleGen, "L1TEGNtupleGen");
+DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtupleGen, "L1TEGNtupleGen");
 
-L1TEGNtupleGen::L1TEGNtupleGen(const edm::ParameterSet &conf) : L1TEGNtupleBase(conf) {}
+L1TEGNtupleGen::L1TEGNtupleGen(const edm::ParameterSet &conf) : L1TEGNtupleBase(conf) {
+  accessEventSetup_ = false;
+}
 
 void L1TEGNtupleGen::initialize(TTree &tree, const edm::ParameterSet &conf, edm::ConsumesCollector &&collector) {
   edm::ParameterSet particleFilter_(conf.getParameter<edm::ParameterSet>("particleFilter"));
@@ -255,26 +254,17 @@ void L1TEGNtupleGen::initialize(TTree &tree, const edm::ParameterSet &conf, edm:
   tree.Branch("simpart_posz", &genpart_posz_);
 }
 
-void L1TEGNtupleGen::fill(const edm::Event &iEvent, const edm::EventSetup &es) {
+
+void L1TEGNtupleGen::fill(const edm::Event &iEvent, const L1TEGNtupleEventSetup &l1teg_es) {
   clear();
 
   edm::Handle<std::vector<PileupSummaryInfo>> PupInfo_h;
   iEvent.getByToken(gen_PU_token_, PupInfo_h);
   const std::vector<PileupSummaryInfo> &PupInfo = *PupInfo_h;
 
-  if (pdt_watcher_.check(es)) {
-    edm::ESHandle<HepPDT::ParticleDataTable> pdt;
-    es.get<PDTRecord>().get(pdt);
-    mySimEvent_->initializePdt(&(*pdt));
-  }
-
-  if (magfield_watcher_.check(es)) {
-    edm::ESHandle<MagneticField> magfield;
-    es.get<IdealMagneticFieldRecord>().get(magfield);
-    aField_ = &(*magfield);
-  }
-
-  triggerTools_.eventSetup(es);
+  mySimEvent_->initializePdt(&(*l1teg_es.pdt));
+  aField_ = &(*l1teg_es.magfield);
+  triggerTools_.setGeometry(l1teg_es.hgcGeom.product());
 
   // This balck magic is needed to use the mySimEvent_
   edm::Handle<edm::HepMCProduct> hevH;

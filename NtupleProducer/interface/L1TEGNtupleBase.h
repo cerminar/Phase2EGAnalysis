@@ -21,6 +21,7 @@ struct L1TEGNtupleEventSetup {
   edm::ESHandle<MagneticField> magfield;
   edm::ESHandle<TrackerGeometry> tkgeom;
   edm::ESHandle<HGCalTriggerGeometryBase> hgcGeom;
+  edm::ESHandle<HepPDT::ParticleDataTable> pdt;
 };
 
 class L1TEGNtupleBase {
