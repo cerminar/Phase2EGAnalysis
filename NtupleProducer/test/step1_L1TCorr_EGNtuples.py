@@ -129,19 +129,29 @@ process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
 doHgcTPS = True
 doAllL1Emu = False
 doTrackTrigger = True
+doCaloEG = True
 
 if doTrackTrigger:
+        print("[CONFIG] Will re-run track-trigger TPs")
         process.load('Configuration.StandardSequences.L1TrackTrigger_cff')
         process.L1TrackTrigger_step = cms.Path(process.L1TrackTrigger)
 
 
 if doAllL1Emu:
+    print("[CONFIG] Will re-run full L1 emu sequence")
     process.load('L1Trigger.Configuration.SimL1Emulator_cff')
     process.ntuple_step.associate(process.SimL1EmulatorTask)
 else:
     if doHgcTPS: 
+        print("[CONFIG] Will re-run HGCal TPs")
         process.load('L1Trigger.L1THGCal.hgcalTriggerPrimitives_cff')
         process.ntuple_step.associate(process.hgcalTriggerPrimitivesTask)
+    if doCaloEG:
+        print("[CONFIG] Will re-run CT Barrel EGs")
+        process.caloEGTask = cms.Task(
+            process.L1EGammaClusterEmuProducer,
+        )
+        process.ntuple_step.associate(process.caloEGTask)
     
 
 process.TFileService = cms.Service(
@@ -155,8 +165,7 @@ process.extraStuff = cms.Task(
     process.L1GTTInputProducer, 
     # process.L1EGammaClusterEmuProducer,
     process.L1VertexFinderEmulator, 
-    process.pfTracksFromL1Tracks,
-    process.pfClustersFromHGC3DClusters,
+    process.l1ctLayer1TaskInputsTask,
     # process.l1ParticleFlowTask, 
     process.l1ctLayer1Task,
     )
