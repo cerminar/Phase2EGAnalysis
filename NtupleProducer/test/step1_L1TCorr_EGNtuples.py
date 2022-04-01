@@ -174,6 +174,7 @@ process.TrackTruthTask = cms.Task(
 
 # process.ntuple_step
 process.ntuple_step.associate(process.extraStuff)
+process.ntuple_step.associate(process.l1ctLayer2EGTask)
 if doHgcTPS:
     process.ntuple_step.associate(process.hgcalTriggerPrimitivesTask)
     
