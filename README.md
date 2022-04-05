@@ -2,8 +2,8 @@
 
 ## Ntuple production
 
-The config file:
-()[NtupleProducer/test/step1_L1TCorr_EGNtuples.py]
+An example config file in 
+[Phase2EGTriggerAnalysis/NtupleProducer/test/step1_L1TCorr_EGNtuples.py](NtupleProducer/test/step1_L1TCorr_EGNtuples.py)
 
 runs the ntuple production and the L1T correlator (Layer-1 and Layer-2 e/g) emulator (and corresponding inputs).
 
