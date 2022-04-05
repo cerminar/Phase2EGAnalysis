@@ -139,6 +139,12 @@ ntuple_L1TCorrL2TkEm = cms.PSet(
     BranchNamePrefix=cms.untracked.string("L2TkEm")
 )
 
+ntuple_L1TCorrL2TkEle = cms.PSet(
+    NtupleName=cms.string('L1TEGNtupleTkElectrons'),
+    TkElectrons=cms.InputTag("l1ctLayer2EG", "L1CtTkElectron"),
+    BranchNamePrefix=cms.untracked.string("L2TkEle")
+)
+
 
 ntuple_L1TCorrTkEmEB = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTkEm'),
