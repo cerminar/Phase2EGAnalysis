@@ -1,5 +1,5 @@
 #include "FWCore/Framework/interface/Frameworkfwd.h"
-#include "FWCore/Framework/interface/EDAnalyzer.h"
+#include "FWCore/Framework/interface/one/EDAnalyzer.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/Framework/interface/EventSetup.h"
@@ -17,15 +17,15 @@
 #include "Geometry/Records/interface/TrackerDigiGeometryRecord.h"
 #include "Geometry/TrackerGeometryBuilder/interface/TrackerGeometry.h"
 
-class L1TEGNtupleManager : public edm::EDAnalyzer {
+class L1TEGNtupleManager : public edm::one::EDAnalyzer<edm::one::WatchRuns, edm::one::SharedResources> {
 public:
   typedef std::unique_ptr<L1TEGNtupleBase> l1teg_ntuple_ptr;
   typedef std::unique_ptr<HGCalTriggerNtupleBase> hgc_ntuple_ptr;
 
-public:
   explicit L1TEGNtupleManager(const edm::ParameterSet& conf);
-  ~L1TEGNtupleManager() override{};
+  ~L1TEGNtupleManager() override = default;
   void beginRun(const edm::Run&, const edm::EventSetup&) override;
+  void endRun(const edm::Run&, const edm::EventSetup&) override;
   void analyze(const edm::Event&, const edm::EventSetup&) override;
 
 private:
@@ -51,6 +51,8 @@ L1TEGNtupleManager::L1TEGNtupleManager(const edm::ParameterSet& conf)
       magfieldToken_(esConsumes<MagneticField, IdealMagneticFieldRecord, edm::Transition::BeginRun>()),
       hgcTriggerGeomToken_(esConsumes<HGCalTriggerGeometryBase, CaloGeometryRecord, edm::Transition::BeginRun>()),
       tkGeomToken_(esConsumes<TrackerGeometry, TrackerDigiGeometryRecord, edm::Transition::BeginRun>(edm::ESInputTag("", "idealForDigi"))) {
+  usesResource(TFileService::kSharedResource);
+
   tree_ = file_service_->make<TTree>("L1TEGTriggerNtuple", "L1TEGTriggerNtuple");
   
   const std::vector<edm::ParameterSet>& hgc_ntuple_cfgs = conf.getParameterSetVector("hgc_Ntuples");
@@ -77,6 +79,8 @@ void L1TEGNtupleManager::beginRun(const edm::Run& run, const edm::EventSetup& es
   l1teg_ntuple_es_.hgcGeom = es.getHandle(hgcTriggerGeomToken_);
   l1teg_ntuple_es_.pdt = es.getHandle(pdtToken_);
 }
+
+void L1TEGNtupleManager::endRun(const edm::Run& run, const edm::EventSetup& es) {}
 
 void L1TEGNtupleManager::analyze(const edm::Event& e, const edm::EventSetup& es) {
   for (auto& hgc_ntuple : hgc_ntuples_) {
