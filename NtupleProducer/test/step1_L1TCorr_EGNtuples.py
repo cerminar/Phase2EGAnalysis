@@ -174,7 +174,7 @@ process.TrackTruthTask = cms.Task(
 # process.L1simulation_step.remove(process.L1TkIsoElectronsHGC)
 
 # Schedule definition
-process.schedule = cms.Schedule(process.raw2digi_step,process.L1TrackTrigger_step,process.L1simulation_step,process.ntuple_step,process.endjob_step,)
+# process.schedule = cms.Schedule(process.raw2digi_step,process.L1TrackTrigger_step,process.L1simulation_step,process.ntuple_step,process.endjob_step,)
 # process.schedule = cms.Schedule(process.raw2digi_step,process.L1simulation_step,process.runPF_newemulator,process.ntuple_step)
 
 # process.L1simulation_step = cms.Path(process.L1GTTInputProducer + process.SimL1Emulator + process.standaloneMuons)
@@ -188,9 +188,9 @@ process.ntuple_step.associate(process.extraStuff)
 process.ntuple_step.associate(process.l1ctLayer2EGTask)
 # process.ntuple_step.associate(process.TrackTruthTask)
 
-#process.schedule = cms.Schedule(process.ntuple_step)
-#if doTrackTrigger:
-#    process.schedule = cms.Schedule(process.L1TrackTrigger_step, process.ntuple_step)
+process.schedule = cms.Schedule(process.ntuple_step)
+if doTrackTrigger:
+    process.schedule = cms.Schedule(process.L1TrackTrigger_step, process.ntuple_step)
 # from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 # associatePatAlgosToolsTask(process)
 
