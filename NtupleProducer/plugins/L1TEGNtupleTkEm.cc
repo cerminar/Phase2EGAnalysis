@@ -25,6 +25,8 @@ private:
   std::vector<float> tkEm_tkIsoPV_;
   std::vector<float> tkEm_pfIso_;
   std::vector<float> tkEm_pfIsoPV_;
+  std::vector<float> tkEm_puppiIso_;
+  std::vector<float> tkEm_puppiIsoPV_;
 
 };
 
@@ -48,6 +50,8 @@ void L1TEGNtupleTkEm::initialize(TTree& tree,
   tree.Branch(branch_name_w_prefix("tkIsoPV").c_str(), &tkEm_tkIsoPV_);
   tree.Branch(branch_name_w_prefix("pfIso").c_str(), &tkEm_pfIso_);
   tree.Branch(branch_name_w_prefix("pfIsoPV").c_str(), &tkEm_pfIsoPV_);
+  tree.Branch(branch_name_w_prefix("puppiIso").c_str(), &tkEm_puppiIso_);
+  tree.Branch(branch_name_w_prefix("puppiIsoPV").c_str(), &tkEm_puppiIsoPV_);
 
 }
 
@@ -71,6 +75,8 @@ void L1TEGNtupleTkEm::fill(const edm::Event& e, const edm::EventSetup& es) {
     tkEm_tkIsoPV_.emplace_back(tkEm_itr.trkIsolPV());
     tkEm_pfIso_.emplace_back(tkEm_itr.pfIsol());
     tkEm_pfIsoPV_.emplace_back(tkEm_itr.pfIsolPV());
+    tkEm_puppiIso_.emplace_back(tkEm_itr.puppiIsol());
+    tkEm_puppiIsoPV_.emplace_back(tkEm_itr.puppiIsolPV());
   }
 }
 
@@ -85,5 +91,7 @@ void L1TEGNtupleTkEm::clear() {
   tkEm_tkIsoPV_.clear();
   tkEm_pfIso_.clear();
   tkEm_pfIsoPV_.clear();
+  tkEm_puppiIso_.clear();
+  tkEm_puppiIsoPV_.clear();
 
 }
