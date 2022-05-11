@@ -47,11 +47,12 @@ l1EGTriggerNtuplizer_l1tCorr = l1tEGNtuplizer.clone()
 l1EGTriggerNtuplizer_l1tCorr.hgc_Ntuples = cms.VPSet(
     ntuple_event,
     # ntuple_triggercells,
-    # ntuple_multiclusters_hmvdr,
+    ntuple_multiclusters_hmvdr,
 )
 l1EGTriggerNtuplizer_l1tCorr.l1teg_Ntuples = cms.VPSet(
     ntuple_l1tgen,
     ntuple_TTTracks,
+    ntuple_EGStaEB,
     ntuple_L1TCorrEGStaEE,
     ntuple_L1TCorrTkEleEE,
     ntuple_L1TCorrTkEleEB,
@@ -59,7 +60,7 @@ l1EGTriggerNtuplizer_l1tCorr.l1teg_Ntuples = cms.VPSet(
     ntuple_L1TCorrTkEmEB,
     ntuple_L1TCorrL2TkEm,
     ntuple_L1TCorrL2TkEle,
-    ntuple_PFCand
+    # ntuple_PFCand
 )
 
 
