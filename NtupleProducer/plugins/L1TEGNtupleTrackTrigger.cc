@@ -88,7 +88,13 @@ private:
   std::vector<float> pfdtk_simcaloeta_;
   std::vector<float> pfdtk_simcalophi_;
   std::vector<float> pfdtk_simz0_;
-
+  std::vector<float> pfdtk_chi2RPhi_;
+  std::vector<float> pfdtk_chi2RZ_;
+  std::vector<float> pfdtk_chi2Bend_;
+  std::vector<int> pfdtk_hitPattern_;
+  std::vector<int> pfdtk_nStubs_;
+  std::vector<int> pfdtk_mvaQual_;
+  std::vector<int> pfdtk_otherQual_;
 
 
   edm::ESWatcher<IdealMagneticFieldRecord> magfield_watcher_;
@@ -170,6 +176,13 @@ void L1TEGNtupleTrackTrigger::initialize(TTree& tree,
     tree.Branch("pfdtk_simcaloeta", &pfdtk_simcaloeta_);
     tree.Branch("pfdtk_simcalophi", &pfdtk_simcalophi_);
     tree.Branch("pfdtk_simz0", &pfdtk_simz0_);
+    tree.Branch("pfdtk_chi2RPhi", &pfdtk_chi2RPhi_);
+    tree.Branch("pfdtk_chi2RZ", &pfdtk_chi2RZ_);
+    tree.Branch("pfdtk_chi2Bend", &pfdtk_chi2Bend_);
+    tree.Branch("pfdtk_hitPattern", &pfdtk_hitPattern_);
+    tree.Branch("pfdtk_nStubs", &pfdtk_nStubs_);
+    tree.Branch("pfdtk_mvaQual", &pfdtk_mvaQual_);
+    tree.Branch("pfdtk_otherQual", &pfdtk_otherQual_);
   }
   
 }
@@ -357,6 +370,17 @@ void L1TEGNtupleTrackTrigger::fill(const edm::Event &ev, const L1TEGNtupleEventS
       pfdtk_simcaloeta_.emplace_back(caloetaphi.first);
       pfdtk_simcalophi_.emplace_back(caloetaphi.second);
       pfdtk_simz0_.emplace_back(z0);
+
+      // we access the following info directly from the ttrack word
+      pfdtk_chi2RPhi_.emplace_back( dtk.trackWord().getChi2RPhi());
+      pfdtk_chi2RZ_.emplace_back(dtk.trackWord().getChi2RZ());
+      pfdtk_chi2Bend_.emplace_back(dtk.trackWord().getBendChi2());
+      pfdtk_hitPattern_.emplace_back(dtk.trackWord().getHitPattern());
+      pfdtk_nStubs_.emplace_back(dtk.trackWord().getNStubs());
+      pfdtk_mvaQual_.emplace_back(dtk.trackWord().getMVAQuality());
+      pfdtk_otherQual_.emplace_back(dtk.trackWord().getMVAOther());
+
+
     }  
   }
 }
