@@ -1,13 +1,13 @@
 # Auto generated configuration file
-# using: 
-# Revision: 1.19 
-# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v 
-# with command line options: step1 --conditions 123X_mcRun4_realistic_v3 -n 100 --era Phase2C9 --eventcontent FEVTDEBUGHLT --runUnscheduled -s RAW2DIGI,L1TrackTrigger,L1 --datatier FEVTDEBUGHLT --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,L1Trigger/Configuration/customisePhase2TTNoMC.customisePhase2TTNoMC,Configuration/DataProcessing/Utils.addMonitoring,L1Trigger/Configuration/customisePhase2FEVTDEBUGHLT.customisePhase2FEVTDEBUGHLT --geometry Extended2026D49 --fileout file:step1_Reprocess_TrackTrigger_L1.root --no_exec --nThreads 8 --python step1_L1_ProdLike.py --filein /store/mc/Phase2HLTTDRWinter20DIGI/TT_TuneCP5_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/110000/005E74D6-B50E-674E-89E6-EAA9A617B476.root --processName=L1REPR
+# using:
+# Revision: 1.19
+# Source: /local/reps/CMSSW/CMSSW/Configuration/Applications/python/ConfigBuilder.py,v
+# with command line options: step1 --conditions auto:phase2_realistic_T15 -n 2 --era Phase2C9 --eventcontent FEVTDEBUGHLT -s RAW2DIGI,L1TrackTrigger,L1 --datatier FEVTDEBUGHLT --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,L1Trigger/Configuration/customisePhase2TTNoMC.customisePhase2TTNoMC,Configuration/DataProcessing/Utils.addMonitoring --geometry Extended2026D49 --fileout file:/tmp/step1_Reprocess_TrackTrigger_L1.root --no_exec --nThreads 8 --python step1_L1_ProdLike.py --filein file:/data/cerminar/Phase2HLTTDRWinter20DIGI/SingleElectron_PT2to200/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3_ext2-v2/F32C5A21-F0E9-9149-B04A-883CC704E820.root
 import FWCore.ParameterSet.Config as cms
 
 from Configuration.Eras.Era_Phase2C9_cff import Phase2C9
 
-process = cms.Process('L1REPR',Phase2C9)
+process = cms.Process('L1',Phase2C9)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -30,9 +30,8 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-    # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/DoubleElectron_FlatPt-1To100/GEN-SIM-DIGI-RAW-MINIAOD/PU200_111X_mcRun4_realistic_T15_v1-v2/E2F32293-BA24-C646-8060-CE3B4A9E5D4B.root'),
-    #fileNames = cms.untracked.vstring('root://eoscms.cern.ch//eos/cms/store/cmst3/group/l1tr/gpetrucc/12_3_X/NewInputs110X/220322/TTbar_PU0/inputs110X_1.root'),
-    fileNames = cms.untracked.vstring('/store/mc/Phase2HLTTDRWinter20DIGI/TT_TuneCP5_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/110000/005E74D6-B50E-674E-89E6-EAA9A617B476.root'),
+    fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/DoubleElectron_FlatPt-1To100/GEN-SIM-DIGI-RAW-MINIAOD/PU200_111X_mcRun4_realistic_T15_v1-v2/E2F32293-BA24-C646-8060-CE3B4A9E5D4B.root'),
+    # fileNames = cms.untracked.vstring('root://eoscms.cern.ch//eos/cms/store/cmst3/group/l1tr/gpetrucc/11_1_0/NewInputs110X/110121.done/DoubleElectron_FlatPt-1To100_PU200/inputs110X_50.root'),
     # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/TT_TuneCP5_14TeV-powheg-pythia8/FEVT/PU200_111X_mcRun4_realistic_T15_v1-v2/003ACFBC-23B2-EA45-9A12-BECFF07760FC.root'),
     # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRWinter20DIGI/SingleElectron_PT2to200/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3_ext2-v2/F32C5A21-F0E9-9149-B04A-883CC704E820.root'),
     secondaryFileNames = cms.untracked.vstring(),
@@ -48,19 +47,17 @@ process.options = cms.untracked.PSet(
     SkipEvent = cms.untracked.vstring(),
     allowUnscheduled = cms.obsolete.untracked.bool,
     canDeleteEarly = cms.untracked.vstring(),
-    deleteNonConsumedUnscheduledModules = cms.untracked.bool(True),
-    dumpOptions = cms.untracked.bool(False),
     emptyRunLumiMode = cms.obsolete.untracked.string,
     eventSetup = cms.untracked.PSet(
         forceNumberOfConcurrentIOVs = cms.untracked.PSet(
-            allowAnyLabel_=cms.required.untracked.uint32
+
         ),
-        numberOfConcurrentIOVs = cms.untracked.uint32(0)
+        numberOfConcurrentIOVs = cms.untracked.uint32(1)
     ),
     fileMode = cms.untracked.string('FULLMERGE'),
     forceEventSetupCacheClearOnNewRun = cms.untracked.bool(False),
     makeTriggerResults = cms.obsolete.untracked.bool,
-    numberOfConcurrentLuminosityBlocks = cms.untracked.uint32(0),
+    numberOfConcurrentLuminosityBlocks = cms.untracked.uint32(1),
     numberOfConcurrentRuns = cms.untracked.uint32(1),
     numberOfStreams = cms.untracked.uint32(0),
     numberOfThreads = cms.untracked.uint32(1),
@@ -72,7 +69,7 @@ process.options = cms.untracked.PSet(
 
 # Production Info
 process.configurationMetadata = cms.untracked.PSet(
-    annotation = cms.untracked.string('step1 nevts:100'),
+    annotation = cms.untracked.string('step1 nevts:2'),
     name = cms.untracked.string('Applications'),
     version = cms.untracked.string('$Revision: 1.19 $')
 )
@@ -86,7 +83,7 @@ if writeOutput:
             dataTier = cms.untracked.string('FEVTDEBUGHLT'),
             filterName = cms.untracked.string('')
         ),
-        fileName = cms.untracked.string('file:step1_Reprocess_TrackTrigger_L1.root'),
+        fileName = cms.untracked.string('file:/tmp/step1_Reprocess_TrackTrigger_L1.root'),
         outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
         splitLevel = cms.untracked.int32(0)
     )
@@ -95,19 +92,7 @@ if writeOutput:
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '123X_mcRun4_realistic_v3', '')
-
-# Path and EndPath definitions
-process.raw2digi_step = cms.Path(process.RawToDigi)
-process.L1TrackTrigger_step = cms.Path(process.L1TrackTrigger)
-process.L1simulation_step = cms.Path(process.SimL1Emulator)
-process.endjob_step = cms.EndPath(process.endOfProcess)
-if writeOutput:
-    process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
- 
- 
-# process.L1TrackTrigger.remove(process.TTTracksFromExtendedTrackletEmulation)
-# process.L1TrackTrigger.remove(process.TTTrackAssociatorFromPixelDigisExtended)
+process.GlobalTag = GlobalTag(process.GlobalTag, 'auto:phase2_realistic_T15', '')
 
 
 # load ntuplizer
@@ -115,12 +100,13 @@ process.load('Phase2EGTriggerAnalysis.NtupleProducer.L1TEGNtuple_cff')
 # process.ntuple_step = cms.Path(process.l1CaloTriggerNtuples)
 process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
 # process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer)
-
+# process.ntuple_TTTracks.fillPFDecodedTracks = True
 
 doHgcTPS = True
-doAllL1Emu = True
+doAllL1Emu = False
 doTrackTrigger = True
 doCaloEG = True
+doCompositeTkEle = True
 
 if doTrackTrigger:
         print("[CONFIG] Will re-run track-trigger TPs")
@@ -143,7 +129,11 @@ else:
             process.L1EGammaClusterEmuProducer,
         )
         process.ntuple_step.associate(process.caloEGTask)
-    
+
+if doCompositeTkEle:
+    process.l1ctLayer1HGCal.tkEgAlgoParameters.doCompositeTkEle = True
+    process.l1ctLayer1HGCal.tkEgAlgoParameters.trkQualityPtMin = 2.
+
 
 process.TFileService = cms.Service(
     "TFileService",
@@ -174,7 +164,7 @@ process.TrackTruthTask = cms.Task(
 # process.L1simulation_step.remove(process.L1TkIsoElectronsHGC)
 
 # Schedule definition
-# process.schedule = cms.Schedule(process.raw2digi_step,process.L1TrackTrigger_step,process.L1simulation_step,process.ntuple_step,process.endjob_step,)
+# process.schedule = cms.Schedule(process.raw2digi_step,process.L1TrackTrigger_step,process.L1simulation_step,process.ntuple_step)
 # process.schedule = cms.Schedule(process.raw2digi_step,process.L1simulation_step,process.runPF_newemulator,process.ntuple_step)
 
 # process.L1simulation_step = cms.Path(process.L1GTTInputProducer + process.SimL1Emulator + process.standaloneMuons)
@@ -195,36 +185,35 @@ if doTrackTrigger:
 # associatePatAlgosToolsTask(process)
 
 #Setup FWK for multithreaded
-process.options.numberOfThreads = 8
-process.options.numberOfStreams = 0
-process.options.numberOfConcurrentLuminosityBlocks = 0
-process.options.eventSetup.numberOfConcurrentIOVs = 1
-
+process.options.numberOfThreads=cms.untracked.uint32(1)
+process.options.numberOfStreams=cms.untracked.uint32(0)
+process.options.numberOfConcurrentLuminosityBlocks=cms.untracked.uint32(1)
+# process.options.SkipEvent = cms.untracked.vstring('ProductNotFound')
 # customisation of the process.
 
 # Automatic addition of the customisation function from SLHCUpgradeSimulations.Configuration.aging
-from SLHCUpgradeSimulations.Configuration.aging import customise_aging_1000 
+from SLHCUpgradeSimulations.Configuration.aging import customise_aging_1000
 
 #call to customisation function customise_aging_1000 imported from SLHCUpgradeSimulations.Configuration.aging
 process = customise_aging_1000(process)
 
 # Automatic addition of the customisation function from L1Trigger.Configuration.customisePhase2TTNoMC
-from L1Trigger.Configuration.customisePhase2TTNoMC import customisePhase2TTNoMC 
+from L1Trigger.Configuration.customisePhase2TTNoMC import customisePhase2TTNoMC
 
 #call to customisation function customisePhase2TTNoMC imported from L1Trigger.Configuration.customisePhase2TTNoMC
 process = customisePhase2TTNoMC(process)
 
 # Automatic addition of the customisation function from Configuration.DataProcessing.Utils
-from Configuration.DataProcessing.Utils import addMonitoring 
+from Configuration.DataProcessing.Utils import addMonitoring
 
 #call to customisation function addMonitoring imported from Configuration.DataProcessing.Utils
 process = addMonitoring(process)
 
-# Automatic addition of the customisation function from L1Trigger.Configuration.customisePhase2FEVTDEBUGHLT
-from L1Trigger.Configuration.customisePhase2FEVTDEBUGHLT import customisePhase2FEVTDEBUGHLT 
+# # Automatic addition of the customisation function from L1Trigger.Configuration.customisePhase2FEVTDEBUGHLT
+# from L1Trigger.Configuration.customisePhase2FEVTDEBUGHLT import customisePhase2FEVTDEBUGHLT 
 
-#call to customisation function customisePhase2FEVTDEBUGHLT imported from L1Trigger.Configuration.customisePhase2FEVTDEBUGHLT
-process = customisePhase2FEVTDEBUGHLT(process)
+# #call to customisation function customisePhase2FEVTDEBUGHLT imported from L1Trigger.Configuration.customisePhase2FEVTDEBUGHLT
+# process = customisePhase2FEVTDEBUGHLT(process)
 
 # process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",
 #                                         ignoreTotal = cms.untracked.int32(1),
@@ -232,7 +221,6 @@ process = customisePhase2FEVTDEBUGHLT(process)
 #                                         )
 
 # End of customisation functions
-
 
 # Customisation from command line
 
