@@ -30,9 +30,9 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-    # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/DoubleElectron_FlatPt-1To100/GEN-SIM-DIGI-RAW-MINIAOD/PU200_111X_mcRun4_realistic_T15_v1-v2/E2F32293-BA24-C646-8060-CE3B4A9E5D4B.root'),
+    fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/DoubleElectron_FlatPt-1To100/GEN-SIM-DIGI-RAW-MINIAOD/PU200_111X_mcRun4_realistic_T15_v1-v2/E2F32293-BA24-C646-8060-CE3B4A9E5D4B.root'),
     #fileNames = cms.untracked.vstring('root://eoscms.cern.ch//eos/cms/store/cmst3/group/l1tr/gpetrucc/12_3_X/NewInputs110X/220322/TTbar_PU0/inputs110X_1.root'),
-    fileNames = cms.untracked.vstring('/store/mc/Phase2HLTTDRWinter20DIGI/TT_TuneCP5_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/110000/005E74D6-B50E-674E-89E6-EAA9A617B476.root'),
+    # fileNames = cms.untracked.vstring('/store/mc/Phase2HLTTDRWinter20DIGI/TT_TuneCP5_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/110000/005E74D6-B50E-674E-89E6-EAA9A617B476.root'),
     # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/TT_TuneCP5_14TeV-powheg-pythia8/FEVT/PU200_111X_mcRun4_realistic_T15_v1-v2/003ACFBC-23B2-EA45-9A12-BECFF07760FC.root'),
     # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRWinter20DIGI/SingleElectron_PT2to200/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3_ext2-v2/F32C5A21-F0E9-9149-B04A-883CC704E820.root'),
     secondaryFileNames = cms.untracked.vstring(),
@@ -40,7 +40,11 @@ process.source = cms.Source("PoolSource",
     # eventsToProcess = cms.untracked.VEventRange('1:162232-1:162232', ),
     # lumisToProcess = cms.untracked.VLuminosityBlockRange('1:978-1:978'),
 )
-
+process.source.inputCommands = cms.untracked.vstring(
+    "keep *",
+    "drop l1tPFCandidates_*_*_RECO",
+    "drop l1tTkPrimaryVertexs_L1TkPrimaryVertex_*_RECO"
+    )
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
     IgnoreCompletely = cms.untracked.vstring(),
@@ -118,7 +122,7 @@ process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
 
 
 doHgcTPS = True
-doAllL1Emu = True
+doAllL1Emu = False
 doTrackTrigger = True
 doCaloEG = True
 
@@ -136,11 +140,11 @@ else:
     if doHgcTPS: 
         print("[CONFIG] Will re-run HGCal TPs")
         process.load('L1Trigger.L1THGCal.hgcalTriggerPrimitives_cff')
-        process.ntuple_step.associate(process.hgcalTriggerPrimitivesTask)
+        process.ntuple_step.associate(process.L1THGCalTriggerPrimitivesTask)
     if doCaloEG:
         print("[CONFIG] Will re-run CT Barrel EGs")
         process.caloEGTask = cms.Task(
-            process.L1EGammaClusterEmuProducer,
+            process.l1tEGammaClusterEmuProducer,
         )
         process.ntuple_step.associate(process.caloEGTask)
     
@@ -152,13 +156,13 @@ process.TFileService = cms.Service(
     
     
 process.extraStuff = cms.Task(
-    process.L1SAMuonsGmt,
-    process.L1GTTInputProducer, 
+    process.l1tSAMuonsGmt,
+    process.l1tGTTInputProducer, 
     # process.L1EGammaClusterEmuProducer,
-    process.L1VertexFinderEmulator, 
-    process.l1ctLayer1TaskInputsTask,
+    process.l1tVertexFinderEmulator, 
+    process.L1TLayer1TaskInputsTask,
     # process.l1ParticleFlowTask, 
-    process.l1ctLayer1Task,
+    process.L1TLayer1Task,
     )
 
 process.TrackTruthTask = cms.Task(
@@ -185,7 +189,7 @@ process.TrackTruthTask = cms.Task(
 
 # process.ntuple_step
 process.ntuple_step.associate(process.extraStuff)
-process.ntuple_step.associate(process.l1ctLayer2EGTask)
+process.ntuple_step.associate(process.L1TLayer2EGTask)
 # process.ntuple_step.associate(process.TrackTruthTask)
 
 process.schedule = cms.Schedule(process.ntuple_step)
@@ -224,7 +228,7 @@ process = addMonitoring(process)
 from L1Trigger.Configuration.customisePhase2FEVTDEBUGHLT import customisePhase2FEVTDEBUGHLT 
 
 #call to customisation function customisePhase2FEVTDEBUGHLT imported from L1Trigger.Configuration.customisePhase2FEVTDEBUGHLT
-process = customisePhase2FEVTDEBUGHLT(process)
+# process = customisePhase2FEVTDEBUGHLT(process)
 
 # process.SimpleMemoryCheck = cms.Service("SimpleMemoryCheck",
 #                                         ignoreTotal = cms.untracked.int32(1),

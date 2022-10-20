@@ -3,7 +3,7 @@ import FWCore.ParameterSet.Config as cms
 
 from Phase2EGTriggerAnalysis.NtupleProducer.L1TEGNtuple_cfi import *
 
-l1EGTriggerNtuplizer = hgcalTriggerNtuplizer.clone()
+l1EGTriggerNtuplizer = l1tHGCalTriggerNtuplizer.clone()
 l1EGTriggerNtuplizer.hgc_Ntuples = cms.VPSet(
     ntuple_event,
     ntuple_triggercells,
@@ -25,7 +25,7 @@ l1EGTriggerNtuplizer.l1teg_Ntuples = cms.VPSet(
 )
 
 
-l1EGTriggerNtuplizer_egOnly = hgcalTriggerNtuplizer.clone()
+l1EGTriggerNtuplizer_egOnly = l1tHGCalTriggerNtuplizer.clone()
 l1EGTriggerNtuplizer_egOnly.hgc_Ntuples = cms.VPSet(
     ntuple_event,
 )
@@ -47,7 +47,7 @@ l1EGTriggerNtuplizer_l1tCorr = l1tEGNtuplizer.clone()
 l1EGTriggerNtuplizer_l1tCorr.hgc_Ntuples = cms.VPSet(
     ntuple_event,
     # ntuple_triggercells,
-    ntuple_multiclusters_hmvdr,
+    # ntuple_multiclusters_hmvdr,
 )
 l1EGTriggerNtuplizer_l1tCorr.l1teg_Ntuples = cms.VPSet(
     ntuple_l1tgen,
@@ -67,7 +67,7 @@ l1EGTriggerNtuplizer_l1tCorr.l1teg_Ntuples = cms.VPSet(
 l1EGTriggerNtuplizer_l1tCorrWCand = l1EGTriggerNtuplizer_l1tCorr.clone()
 l1EGTriggerNtuplizer_l1tCorrWCand.l1teg_Ntuples.append = ntuple_PFCand
 
-l1EGTriggerNtuplizer_noGen = hgcalTriggerNtuplizer.clone()
+l1EGTriggerNtuplizer_noGen = l1tHGCalTriggerNtuplizer.clone()
 l1EGTriggerNtuplizer_noGen.hgc_Ntuples = cms.VPSet(
     ntuple_event,
 )

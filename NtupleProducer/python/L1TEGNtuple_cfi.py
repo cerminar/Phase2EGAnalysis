@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 # cluster extras
 from L1Trigger.L1THGCalUtilities.hgcalTriggerNtuples_cfi import *
-from L1Trigger.Phase2L1ParticleFlow.pfClustersFromHGC3DClusters_cfi import *
+from L1Trigger.Phase2L1ParticleFlow.l1tPFClustersFromHGC3DClusters_cfi import *
 
 
 l1tEGNtuplizer = cms.EDAnalyzer(
@@ -38,8 +38,8 @@ ntuple_multiclusters_extra = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleHGCMulticlusterExtra'),
     Multiclusters=ntuple_multiclusters_hmvdr.Multiclusters,
     BranchNamePrefix=ntuple_multiclusters_hmvdr.Prefix,
-    emVsPionID=pfClustersFromHGC3DClusters.emVsPionID,
-    emVsPUID=pfClustersFromHGC3DClusters.emVsPUID
+    emVsPionID=l1tPFClustersFromHGC3DClusters.emVsPionID,
+    emVsPUID=l1tPFClustersFromHGC3DClusters.emVsPUID
 )
 
 # tracks
@@ -108,20 +108,20 @@ ntuple_TkEleEllEB = cms.PSet(
 # L1T correlator emulation
 ntuple_L1TCorrEGStaEE = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleEgamma'),
-    Egamma=cms.InputTag('l1ctLayer1EG:L1EgEE'),
+    Egamma=cms.InputTag('l1tLayer1EG:L1EgEE'),
     BranchNamePrefix=cms.untracked.string("EGStaEE")
 )
 
 
 ntuple_L1TCorrTkEleEE = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTkElectrons'),
-    TkElectrons=cms.InputTag("l1ctLayer1EG", "L1TkEleEE"),
+    TkElectrons=cms.InputTag("l1tLayer1EG", "L1TkEleEE"),
     BranchNamePrefix=cms.untracked.string("TkEleEE")
 )
 
 ntuple_L1TCorrTkEleEB = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTkElectrons'),
-    TkElectrons=cms.InputTag("l1ctLayer1EG", "L1TkEleEB"),
+    TkElectrons=cms.InputTag("l1tLayer1EG", "L1TkEleEB"),
     BranchNamePrefix=cms.untracked.string("TkEleEB")
 )
 
@@ -129,31 +129,31 @@ ntuple_L1TCorrTkEleEB = cms.PSet(
 
 ntuple_L1TCorrTkEmEE = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTkEm'),
-    TkEms=cms.InputTag("l1ctLayer1EG", "L1TkEmEE"),
+    TkEms=cms.InputTag("l1tLayer1EG", "L1TkEmEE"),
     BranchNamePrefix=cms.untracked.string("TkEmEE")
 )
 
 ntuple_L1TCorrL2TkEm = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTkEm'),
-    TkEms=cms.InputTag("l1ctLayer2EG", "L1CtTkEm"),
+    TkEms=cms.InputTag("l1tLayer2EG", "L1CtTkEm"),
     BranchNamePrefix=cms.untracked.string("L2TkEm")
 )
 
 ntuple_L1TCorrL2TkEle = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTkElectrons'),
-    TkElectrons=cms.InputTag("l1ctLayer2EG", "L1CtTkElectron"),
+    TkElectrons=cms.InputTag("l1tLayer2EG", "L1CtTkElectron"),
     BranchNamePrefix=cms.untracked.string("L2TkEle")
 )
 
 
 ntuple_L1TCorrTkEmEB = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTkEm'),
-    TkEms=cms.InputTag("l1ctLayer1EG", "L1TkEmEB"),
+    TkEms=cms.InputTag("l1tLayer1EG", "L1TkEmEB"),
     BranchNamePrefix=cms.untracked.string("TkEmEB")
 )
 
 ntuple_PFCand = cms.PSet(
     NtupleName=cms.string('L1TEGNtuplePFCands'),
-    L1PFObjects=cms.InputTag("l1ctLayer1", "PF"),
+    L1PFObjects=cms.InputTag("l1tLayer1", "PF"),
     BranchNamePrefix=cms.untracked.string("PFCand")
 )
