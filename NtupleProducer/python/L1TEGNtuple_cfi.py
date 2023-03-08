@@ -45,7 +45,7 @@ ntuple_multiclusters_extra = cms.PSet(
 # tracks
 ntuple_TTTracks = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleTrackTrigger'),
-    TTTracks=cms.InputTag("TTTracksFromTrackletEmulation", "Level1TTTracks"),
+    TTTracks=cms.InputTag("l1tTTTracksFromTrackletEmulation", "Level1TTTracks"),
     fillPFDecodedTracks=cms.bool(False),
     fillStubsInfo=cms.bool(True),
     fillTrackingParticleTruth=cms.bool(False),
@@ -58,7 +58,7 @@ ntuple_TTTracks = cms.PSet(
 # barrel
 ntuple_EGStaEB = cms.PSet(
     NtupleName=cms.string('L1TEGNtupleEgamma'),
-    Egamma=cms.InputTag("L1EGammaClusterEmuProducer"),
+    Egamma=cms.InputTag("l1tEGammaClusterEmuProducer"),
     BranchNamePrefix=cms.untracked.string("EGStaEB")
 )
 
