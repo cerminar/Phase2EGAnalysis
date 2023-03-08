@@ -30,7 +30,7 @@ process.maxEvents = cms.untracked.PSet(
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/DoubleElectron_FlatPt-1To100/GEN-SIM-DIGI-RAW-MINIAOD/PU200_111X_mcRun4_realistic_T15_v1-v2/E2F32293-BA24-C646-8060-CE3B4A9E5D4B.root'),
+    fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2Fall22DRMiniAOD/DoubleElectron_FlatPt-1To100-gun/GEN-SIM-DIGI-RAW-MINIAOD/PU200_125X_mcRun4_realistic_v2-v1/06befd8b-ba9d-47c7-b025-aed063405c58.root'),
     #fileNames = cms.untracked.vstring('root://eoscms.cern.ch//eos/cms/store/cmst3/group/l1tr/gpetrucc/12_3_X/NewInputs110X/220322/TTbar_PU0/inputs110X_1.root'),
     # fileNames = cms.untracked.vstring('/store/mc/Phase2HLTTDRWinter20DIGI/TT_TuneCP5_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/110000/005E74D6-B50E-674E-89E6-EAA9A617B476.root'),
     # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/TT_TuneCP5_14TeV-powheg-pythia8/FEVT/PU200_111X_mcRun4_realistic_T15_v1-v2/003ACFBC-23B2-EA45-9A12-BECFF07760FC.root'),
@@ -121,10 +121,10 @@ process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
 # process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer)
 
 
-doHgcTPS = True
+doHgcTPS = False
 doAllL1Emu = False
-doTrackTrigger = True
-doCaloEG = True
+doTrackTrigger = False
+doCaloEG = False
 
 if doTrackTrigger:
         print("[CONFIG] Will re-run track-trigger TPs")
@@ -188,7 +188,7 @@ process.TrackTruthTask = cms.Task(
 # process.schedule = cms.Schedule(process.raw2digi_step,process.L1simulation_step, process.ntuple_step)
 
 # process.ntuple_step
-process.ntuple_step.associate(process.extraStuff)
+# process.ntuple_step.associate(process.extraStuff)
 process.ntuple_step.associate(process.L1TLayer2EGTask)
 # process.ntuple_step.associate(process.TrackTruthTask)
 
@@ -199,7 +199,7 @@ if doTrackTrigger:
 # associatePatAlgosToolsTask(process)
 
 #Setup FWK for multithreaded
-process.options.numberOfThreads = 8
+process.options.numberOfThreads = 1
 process.options.numberOfStreams = 0
 process.options.numberOfConcurrentLuminosityBlocks = 0
 process.options.eventSetup.numberOfConcurrentIOVs = 1
