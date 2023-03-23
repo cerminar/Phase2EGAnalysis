@@ -24,7 +24,7 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100),
+    input = cms.untracked.int32(10),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
@@ -45,6 +45,7 @@ process.source.inputCommands = cms.untracked.vstring(
     "drop l1tPFCandidates_*_*_RECO",
     "drop l1tTkPrimaryVertexs_L1TkPrimaryVertex_*_RECO"
     )
+
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
     IgnoreCompletely = cms.untracked.vstring(),
@@ -105,7 +106,7 @@ process.load('Phase2EGTriggerAnalysis.NtupleProducer.L1TEGNtuple_cff')
 # process.ntuple_step = cms.Path(process.l1CaloTriggerNtuples)
 process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
 # process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer)
-# process.ntuple_TTTracks.fillPFDecodedTracks = True
+process.ntuple_TTTracks.fillPFDecodedTracks = True
 
 doHgcTPS = False
 doAllL1Emu = False

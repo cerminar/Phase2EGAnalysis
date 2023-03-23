@@ -28,6 +28,16 @@ private:
   std::vector<float> tkEle_tkPt_;
   std::vector<float> tkEle_tkZ0_;
   std::vector<float> tkEle_compBdt_;
+  std::vector<float> tkEle_compHoe_;
+  std::vector<float> tkEle_compSrrtot_;
+  std::vector<float> tkEle_compDeta_;
+  std::vector<float> tkEle_compDphi_;
+  std::vector<float> tkEle_compDpt_;
+  std::vector<float> tkEle_compMeanz_;
+  std::vector<float> tkEle_compNstubs_;
+  std::vector<float> tkEle_compChi2RPhi_;
+  std::vector<float> tkEle_compChi2RZ_;
+  std::vector<float> tkEle_compChi2Bend_;
 };
 
 DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtupleTkElectrons, "L1TEGNtupleTkElectrons");
@@ -53,8 +63,16 @@ void L1TEGNtupleTkElectrons::initialize(TTree& tree,
   tree.Branch(branch_name_w_prefix("tkPt").c_str(), &tkEle_tkPt_);
   tree.Branch(branch_name_w_prefix("tkZ0").c_str(), &tkEle_tkZ0_);
   tree.Branch(branch_name_w_prefix("compBdt").c_str(), &tkEle_compBdt_);
-
-
+  tree.Branch(branch_name_w_prefix("compHoe").c_str(), &tkEle_compHoe_);
+  tree.Branch(branch_name_w_prefix("compSrrtot").c_str(), &tkEle_compSrrtot_);
+  tree.Branch(branch_name_w_prefix("compDeta").c_str(), &tkEle_compDeta_);
+  tree.Branch(branch_name_w_prefix("compDphi").c_str(), &tkEle_compDphi_);
+  tree.Branch(branch_name_w_prefix("compDpt").c_str(), &tkEle_compDpt_);
+  tree.Branch(branch_name_w_prefix("compMeanz").c_str(), &tkEle_compMeanz_);
+  tree.Branch(branch_name_w_prefix("compNstubs").c_str(), &tkEle_compNstubs_);
+  tree.Branch(branch_name_w_prefix("compChi2RPhi").c_str(), &tkEle_compChi2RPhi_);
+  tree.Branch(branch_name_w_prefix("compChi2RZ").c_str(), &tkEle_compChi2RZ_);
+  tree.Branch(branch_name_w_prefix("compChi2Bend").c_str(), &tkEle_compChi2Bend_);
 }
 
 void L1TEGNtupleTkElectrons::fill(const edm::Event& e, const edm::EventSetup& es) {
@@ -81,6 +99,16 @@ void L1TEGNtupleTkElectrons::fill(const edm::Event& e, const edm::EventSetup& es
     tkEle_tkPt_.emplace_back(tkele_itr.trkPtr()->momentum().perp());
     tkEle_tkZ0_.emplace_back(tkele_itr.trkPtr()->POCA().z());
     tkEle_compBdt_.emplace_back(tkele_itr.compositeBdtScore());
+    tkEle_compHoe_.emplace_back(tkele_itr.compositeHoE());
+    tkEle_compSrrtot_.emplace_back(tkele_itr.compositeSrrtot());
+    tkEle_compDeta_.emplace_back(tkele_itr.compositeDeta());
+    tkEle_compDphi_.emplace_back(tkele_itr.compositeDphi());
+    tkEle_compDpt_.emplace_back(tkele_itr.compositeDpt());
+    tkEle_compMeanz_.emplace_back(tkele_itr.compositeMeanz());
+    tkEle_compNstubs_.emplace_back(tkele_itr.compositeNstubs());
+    tkEle_compChi2RPhi_.emplace_back(tkele_itr.compositeChi2RPhi());
+    tkEle_compChi2RZ_.emplace_back(tkele_itr.compositeChi2RZ());
+    tkEle_compChi2Bend_.emplace_back(tkele_itr.compositeChi2Bend());
   }
 }
 
@@ -98,4 +126,14 @@ void L1TEGNtupleTkElectrons::clear() {
   tkEle_tkPt_.clear();
   tkEle_tkZ0_.clear();
   tkEle_compBdt_.clear();
+  tkEle_compHoe_.clear();
+  tkEle_compSrrtot_.clear();
+  tkEle_compDeta_.clear();
+  tkEle_compDphi_.clear();
+  tkEle_compDpt_.clear();
+  tkEle_compMeanz_.clear();
+  tkEle_compNstubs_.clear();
+  tkEle_compChi2RPhi_.clear();
+  tkEle_compChi2RZ_.clear();
+  tkEle_compChi2Bend_.clear();  
 }
