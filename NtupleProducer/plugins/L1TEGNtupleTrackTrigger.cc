@@ -415,8 +415,16 @@ void L1TEGNtupleTrackTrigger::clear() {
   pfdtk_simcaloeta_.clear();
   pfdtk_simcalophi_.clear();
   pfdtk_simz0_.clear();
+  pfdtk_chi2RPhi_.clear();
+  pfdtk_chi2RZ_.clear();
+  pfdtk_chi2Bend_.clear();
+  pfdtk_hitPattern_.clear();
+  pfdtk_nStubs_.clear();
+  pfdtk_mvaQual_.clear();
+  pfdtk_otherQual_.clear();
 
-  
+
+
 }
 
 // #include "FastSimulation/Particle/interface/RawParticle.h"
