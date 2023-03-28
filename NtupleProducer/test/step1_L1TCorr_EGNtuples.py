@@ -113,6 +113,7 @@ doAllL1Emu = False
 doTrackTrigger = False
 doCaloEG = False
 doCompositeTkEle = True
+doCorrL1 = True
 
 if doTrackTrigger:
         print("[CONFIG] Will re-run track-trigger TPs")
@@ -180,7 +181,8 @@ process.TrackTruthTask = cms.Task(
 # process.schedule = cms.Schedule(process.raw2digi_step,process.L1simulation_step, process.ntuple_step)
 
 # process.ntuple_step
-# process.ntuple_step.associate(process.extraStuff)
+if doCorrL1:
+    process.ntuple_step.associate(process.extraStuff)
 process.ntuple_step.associate(process.L1TLayer2EGTask)
 # process.ntuple_step.associate(process.TrackTruthTask)
 
