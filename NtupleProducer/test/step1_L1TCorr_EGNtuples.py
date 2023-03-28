@@ -138,7 +138,7 @@ else:
         process.ntuple_step.associate(process.caloEGTask)
 
 if doCompositeTkEle:
-    process.l1ctLayer1HGCal.tkEgAlgoParameters.doCompositeTkEle = True
+    process.l1tLayer1HGCal.tkEgAlgoParameters.doCompositeTkEle = True
     # process.l1ctLayer1HGCal.tkEgAlgoParameters.trkQualityPtMin = 2.
 
 
