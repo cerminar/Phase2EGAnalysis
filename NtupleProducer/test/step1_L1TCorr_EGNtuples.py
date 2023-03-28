@@ -139,7 +139,7 @@ else:
 
 if doCompositeTkEle:
     process.l1ctLayer1HGCal.tkEgAlgoParameters.doCompositeTkEle = True
-    process.l1ctLayer1HGCal.tkEgAlgoParameters.trkQualityPtMin = 2.
+    # process.l1ctLayer1HGCal.tkEgAlgoParameters.trkQualityPtMin = 2.
 
 
 process.TFileService = cms.Service(
