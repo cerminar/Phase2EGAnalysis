@@ -27,6 +27,8 @@ private:
   std::vector<float> tkEle_tkChi2_;
   std::vector<float> tkEle_tkPt_;
   std::vector<float> tkEle_tkZ0_;
+  std::vector<float> tkEle_compBDTScore_;
+
 };
 
 DEFINE_EDM_PLUGIN(L1TEGNtupleFactory, L1TEGNtupleTkElectrons, "L1TEGNtupleTkElectrons");
@@ -51,6 +53,8 @@ void L1TEGNtupleTkElectrons::initialize(TTree& tree,
   tree.Branch(branch_name_w_prefix("tkChi2").c_str(), &tkEle_tkChi2_);
   tree.Branch(branch_name_w_prefix("tkPt").c_str(), &tkEle_tkPt_);
   tree.Branch(branch_name_w_prefix("tkZ0").c_str(), &tkEle_tkZ0_);
+  tree.Branch(branch_name_w_prefix("compBDTScore").c_str(), &tkEle_compBDTScore_);
+
 }
 
 void L1TEGNtupleTkElectrons::fill(const edm::Event& e, const edm::EventSetup& es) {
@@ -76,6 +80,8 @@ void L1TEGNtupleTkElectrons::fill(const edm::Event& e, const edm::EventSetup& es
     tkEle_tkChi2_.emplace_back(tkele_itr.trkPtr()->chi2());
     tkEle_tkPt_.emplace_back(tkele_itr.trkPtr()->momentum().perp());
     tkEle_tkZ0_.emplace_back(tkele_itr.trkPtr()->POCA().z());
+    tkEle_compBDTScore_.emplace_back(tkele_itr.compositeBdtScore());
+
   }
 }
 
@@ -92,4 +98,5 @@ void L1TEGNtupleTkElectrons::clear() {
   tkEle_tkChi2_.clear();
   tkEle_tkPt_.clear();
   tkEle_tkZ0_.clear();
+  tkEle_compBDTScore_.clear();
 }
