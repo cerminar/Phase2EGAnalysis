@@ -9,8 +9,6 @@
   <use   name="SimTracker/TrackTriggerAssociation"/>
   <use   name="CommonTools/UtilAlgos"/>
   <use   name="L1Trigger/L1THGCalUtilities"/>
-  <use   name="MagneticField/Engine"/>
-  <use   name="MagneticField/Records"/>
   <use   name="TrackPropagation/RungeKutta"/>
   <use   name="FastSimulation/Event"/>
   <!-- <use   name="CommonTools/UtilAlgos"/>
