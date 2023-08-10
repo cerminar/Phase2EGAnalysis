@@ -5,9 +5,9 @@
 # with command line options: step1 --conditions 123X_mcRun4_realistic_v3 -n 100 --era Phase2C9 --eventcontent FEVTDEBUGHLT --runUnscheduled -s RAW2DIGI,L1TrackTrigger,L1 --datatier FEVTDEBUGHLT --customise SLHCUpgradeSimulations/Configuration/aging.customise_aging_1000,L1Trigger/Configuration/customisePhase2TTNoMC.customisePhase2TTNoMC,Configuration/DataProcessing/Utils.addMonitoring,L1Trigger/Configuration/customisePhase2FEVTDEBUGHLT.customisePhase2FEVTDEBUGHLT --geometry Extended2026D49 --fileout file:step1_Reprocess_TrackTrigger_L1.root --no_exec --nThreads 8 --python step1_L1_ProdLike.py --filein /store/mc/Phase2HLTTDRWinter20DIGI/TT_TuneCP5_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/110000/005E74D6-B50E-674E-89E6-EAA9A617B476.root --processName=L1REPR
 import FWCore.ParameterSet.Config as cms
 
-from Configuration.Eras.Era_Phase2C9_cff import Phase2C9
+from Configuration.Eras.Era_Phase2C17I13M9_cff import Phase2C17I13M9
 
-process = cms.Process('L1REPR',Phase2C9)
+process = cms.Process('L1REPR',Phase2C17I13M9)
 
 # import of standard configurations
 process.load('Configuration.StandardSequences.Services_cff')
@@ -15,7 +15,7 @@ process.load('SimGeneral.HepPDTESSource.pythiapdt_cfi')
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.load('Configuration.EventContent.EventContent_cff')
 process.load('SimGeneral.MixingModule.mixNoPU_cfi')
-process.load('Configuration.Geometry.GeometryExtended2026D49Reco_cff')
+process.load('Configuration.Geometry.GeometryExtended2026D88Reco_cff')
 process.load('Configuration.StandardSequences.MagneticField_cff')
 process.load('Configuration.StandardSequences.RawToDigi_cff')
 process.load('Configuration.StandardSequences.L1TrackTrigger_cff')
@@ -43,7 +43,9 @@ process.source = cms.Source("PoolSource",
 process.source.inputCommands = cms.untracked.vstring(
     "keep *",
     "drop l1tPFCandidates_*_*_RECO",
-    "drop l1tTkPrimaryVertexs_L1TkPrimaryVertex_*_RECO"
+    "drop l1tTkPrimaryVertexs_L1TkPrimaryVertex_*_RECO",
+    'drop l1tPFJets_*_*_*',
+    'drop l1tTrackerMuons_*_*_*'
     )
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
@@ -84,7 +86,6 @@ process.configurationMetadata = cms.untracked.PSet(
 # Output definition
 writeOutput = False 
 if writeOutput:
-    process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
     process.FEVTDEBUGHLToutput = cms.OutputModule("PoolOutputModule",
         dataset = cms.untracked.PSet(
             dataTier = cms.untracked.string('FEVTDEBUGHLT'),
@@ -94,20 +95,21 @@ if writeOutput:
         outputCommands = process.FEVTDEBUGHLTEventContent.outputCommands,
         splitLevel = cms.untracked.int32(0)
     )
+    process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
 
 # Additional output definition
 
 # Other statements
 from Configuration.AlCa.GlobalTag import GlobalTag
-process.GlobalTag = GlobalTag(process.GlobalTag, '123X_mcRun4_realistic_v3', '')
+process.GlobalTag = GlobalTag(process.GlobalTag, '125X_mcRun4_realistic_v2', '')
 
 # Path and EndPath definitions
 process.raw2digi_step = cms.Path(process.RawToDigi)
-process.L1TrackTrigger_step = cms.Path(process.L1TrackTrigger)
+# process.L1TrackTrigger_step = cms.Path(process.L1TrackTrigger)
 process.L1simulation_step = cms.Path(process.SimL1Emulator)
 process.endjob_step = cms.EndPath(process.endOfProcess)
-if writeOutput:
-    process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
+# if writeOutput:
+#     process.FEVTDEBUGHLToutput_step = cms.EndPath(process.FEVTDEBUGHLToutput)
  
  
 # process.L1TrackTrigger.remove(process.TTTracksFromExtendedTrackletEmulation)
@@ -121,10 +123,10 @@ process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer_l1tCorr)
 # process.ntuple_step = cms.Path(process.l1EGTriggerNtuplizer)
 
 
-doHgcTPS = False
-doAllL1Emu = False
+doHgcTPS = True
+doAllL1Emu = True
 doTrackTrigger = False
-doCaloEG = False
+doCaloEG = True
 doCorrL1 = True
 
 if doTrackTrigger:
@@ -196,7 +198,7 @@ process.ntuple_step.associate(process.L1TLayer2EGTask)
 
 process.schedule = cms.Schedule(process.ntuple_step)
 if doTrackTrigger:
-    process.schedule = cms.Schedule(process.L1TrackTrigger_step, process.ntuple_step)
+    process.schedule = cms.Schedule(process.L1TrackTrigger_step, process.Phase2L1GTProducer, process.ntuple_step)
 # from PhysicsTools.PatAlgos.tools.helpers import associatePatAlgosToolsTask
 # associatePatAlgosToolsTask(process)
 
