@@ -24,19 +24,25 @@ process.load('Configuration.StandardSequences.EndOfProcess_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 
 process.maxEvents = cms.untracked.PSet(
-    input = cms.untracked.int32(100),
+    input = cms.untracked.int32(-1),
     output = cms.optional.untracked.allowed(cms.int32,cms.PSet)
 )
 
 # Input source
 process.source = cms.Source("PoolSource",
-    fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2Fall22DRMiniAOD/DoubleElectron_FlatPt-1To100-gun/GEN-SIM-DIGI-RAW-MINIAOD/PU200_125X_mcRun4_realistic_v2-v1/06befd8b-ba9d-47c7-b025-aed063405c58.root'),
+    fileNames = cms.untracked.vstring(
+        # 'root://eoscms.cern.ch//eos/cms/store/mc/Phase2Spring23DIGIRECOMiniAOD/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW-MINIAOD/PU200_Trk1GeV_131X_mcRun4_realistic_v5-v1/30003/bf09d139-9938-4092-8057-4190a8a15e79.root',
+        'root://eoscms.cern.ch//eos/cms/store/mc/Phase2Spring23DIGIRECOMiniAOD/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW-MINIAOD/PU200_Trk1GeV_131X_mcRun4_realistic_v5-v1/30002/d8884729-c89d-4013-9080-782de25a7a88.root',
+        'root://eoscms.cern.ch//eos/cms/store/mc/Phase2Spring23DIGIRECOMiniAOD/MinBias_TuneCP5_14TeV-pythia8/GEN-SIM-DIGI-RAW-MINIAOD/PU200_Trk1GeV_131X_mcRun4_realistic_v5-v1/30002/3b44d52d-1807-4a4f-9b9b-19466303a741.root',
+
+    ),
+    # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2Fall22DRMiniAOD/DoubleElectron_FlatPt-1To100-gun/GEN-SIM-DIGI-RAW-MINIAOD/PU200_125X_mcRun4_realistic_v2-v1/06befd8b-ba9d-47c7-b025-aed063405c58.root'),
     #fileNames = cms.untracked.vstring('root://eoscms.cern.ch//eos/cms/store/cmst3/group/l1tr/gpetrucc/12_3_X/NewInputs110X/220322/TTbar_PU0/inputs110X_1.root'),
     # fileNames = cms.untracked.vstring('/store/mc/Phase2HLTTDRWinter20DIGI/TT_TuneCP5_14TeV-powheg-pythia8/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3-v2/110000/005E74D6-B50E-674E-89E6-EAA9A617B476.root'),
     # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRSummer20ReRECOMiniAOD/TT_TuneCP5_14TeV-powheg-pythia8/FEVT/PU200_111X_mcRun4_realistic_T15_v1-v2/003ACFBC-23B2-EA45-9A12-BECFF07760FC.root'),
     # fileNames = cms.untracked.vstring('file:/data/cerminar/Phase2HLTTDRWinter20DIGI/SingleElectron_PT2to200/GEN-SIM-DIGI-RAW/PU200_110X_mcRun4_realistic_v3_ext2-v2/F32C5A21-F0E9-9149-B04A-883CC704E820.root'),
     secondaryFileNames = cms.untracked.vstring(),
-           
+    # skipEvents=cms.untracked.uint32(280)       ,
     # eventsToProcess = cms.untracked.VEventRange('1:162232-1:162232', ),
     # lumisToProcess = cms.untracked.VLuminosityBlockRange('1:978-1:978'),
 )
@@ -45,7 +51,9 @@ process.source.inputCommands = cms.untracked.vstring(
     "drop l1tPFCandidates_*_*_RECO",
     "drop l1tTkPrimaryVertexs_L1TkPrimaryVertex_*_RECO",
     'drop l1tPFJets_*_*_*',
-    'drop l1tTrackerMuons_*_*_*'
+    'drop l1tTrackerMuons_*_*_*',
+    'drop *_hlt*_*_HLT',
+    'drop triggerTriggerFilterObjectWithRefs_l1t*_*_HLT'
     )
 process.options = cms.untracked.PSet(
     FailPath = cms.untracked.vstring(),
